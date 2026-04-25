@@ -3572,13 +3572,6 @@
 
             <div class="menu-section">
                 <div class="menu-section-title">&#x2694;&#xFE0F; Combate</div>
-                <div class="menu-item" id="menu-raid-btn">
-                    <div class="menu-item-icon">&#x1F5E1;&#xFE0F;</div>
-                    <div class="menu-item-text">
-                        <div class="menu-item-title">Raids (Survival)</div>
-                        <div class="menu-item-desc">Sobrevive oleadas infinitas - Premios Generales</div>
-                    </div>
-                </div>
                 <div class="menu-item" id="menu-dungeon-btn">
                     <div class="menu-item-icon">&#x1F3F0;</div>
                     <div class="menu-item-text">
@@ -3823,7 +3816,6 @@
             <div class="modal-tabs">
                 <button class="tab-button active" data-tab="characters">👤 Characters</button>
                 <button class="tab-button" data-tab="classes">🎯 Classes</button>
-                <button class="tab-button" data-tab="fruits">🍎 Fruits</button>
             </div>
             <div class="modal-body">
                 <div id="role-grid" class="role-grid"></div>
@@ -5252,19 +5244,6 @@
                         </div>
                     </div>
 
-                    <div class="loadout-nav-item" data-tab="fruits"
-                        style="padding: 0 30px; display: flex; align-items: center; gap: 12px; cursor: pointer; transition: all 0.3s; border-right: 1px solid rgba(0, 217, 255, 0.1); opacity: 0.6; height: 80px;">
-                        <div id="loadout-nav-icon-fruits" class="nav-icon-container">
-                            <!-- Icon injected via JS -->
-                        </div>
-                        <div
-                            style="font-size: 14px; font-weight: 700; color: white; text-transform: uppercase; letter-spacing: 1px;">
-                            FRUTAS</div>
-                        <div class="tab-indicator"
-                            style="position: absolute; bottom: 0; left: 0; width: 100%; height: 4px; background: #00d9ff; opacity: 0;">
-                        </div>
-                    </div>
-
                     <div class="loadout-nav-item" data-tab="masteries"
                         style="padding: 0 30px; display: flex; align-items: center; gap: 12px; cursor: pointer; transition: all 0.3s; border-right: 1px solid rgba(0, 217, 255, 0.1); opacity: 0.6; height: 80px;">
                         <div id="loadout-nav-icon-masteries" class="nav-icon-container">
@@ -5337,6 +5316,28 @@
     </div>
 
     <script>
+        const OWS_API_BASE = 'https://owsdatabase.onrender.com';
+        (function initOwsProjectGuard() {
+            const mountGuard = () => {
+                if (!window.OWSProjectRestrictionGuard || typeof window.OWSProjectRestrictionGuard.mount !== 'function') return;
+                window.OWSProjectRestrictionGuard.mount({
+                    apiBaseUrl: OWS_API_BASE,
+                    projectSlug: 'wild-destiny',
+                    projectName: 'Wild Destiny',
+                    checkIntervalMs: 30000
+                });
+            };
+            if (window.OWSProjectRestrictionGuard) {
+                mountGuard();
+                return;
+            }
+            const s = document.createElement('script');
+            s.src = 'https://owsdatabase.onrender.com/shared/ows-project-guard.js';
+            s.async = true;
+            s.onload = mountGuard;
+            document.head.appendChild(s);
+        })();
+
         // ===== PARTICLES BACKGROUND =====
         const particleCanvas = document.getElementById('particles-bg');
         const particleCtx = particleCanvas.getContext('2d');
@@ -6553,8 +6554,8 @@
                 // === CLASS ICONS ===
                 'class_dragonhunter': function (ctx, s) {
                     const c = s / 2;
-                    // Dragon head silhouette
-                    ctx.fillStyle = IconRenderer.helpers.gradient(ctx, c, c, s / 2, '#ff6b35', '#8b0000');
+                    // Rework: dragon crest with ember core.
+                    ctx.fillStyle = IconRenderer.helpers.gradient(ctx, c, c, s / 2, '#ff8c42', '#6d0f0f');
                     ctx.beginPath();
                     ctx.moveTo(c, s * 0.1);
                     ctx.bezierCurveTo(s * 0.8, s * 0.2, s * 0.9, s * 0.5, s * 0.85, s * 0.7);
@@ -6571,8 +6572,207 @@
                     ctx.beginPath();
                     ctx.arc(c + s * 0.1, s * 0.4, s * 0.08, 0, Math.PI * 2);
                     ctx.fill();
+                    ctx.strokeStyle = 'rgba(255, 230, 150, 0.85)';
+                    ctx.lineWidth = Math.max(2, s * 0.028);
+                    ctx.beginPath();
+                    ctx.arc(c, c, s * 0.3, -Math.PI * 0.78, Math.PI * 0.22);
+                    ctx.stroke();
+                    ctx.fillStyle = '#ffd27d';
+                    ctx.beginPath();
+                    ctx.moveTo(c - s * 0.08, c + s * 0.12);
+                    ctx.lineTo(c, c + s * 0.26);
+                    ctx.lineTo(c + s * 0.08, c + s * 0.12);
+                    ctx.closePath();
+                    ctx.fill();
                     IconRenderer.helpers.clearGlow(ctx);
                 },
+
+                'class_galaxia': function (ctx, s) {
+                    const c = s / 2;
+                    const bg = ctx.createRadialGradient(c, c, s * 0.06, c, c, s * 0.5);
+                    bg.addColorStop(0, '#b9f8ff');
+                    bg.addColorStop(0.22, '#7fd4ff');
+                    bg.addColorStop(0.55, '#6a4dff');
+                    bg.addColorStop(1, '#090616');
+                    ctx.fillStyle = bg;
+                    ctx.beginPath();
+                    ctx.arc(c, c, s * 0.47, 0, Math.PI * 2);
+                    ctx.fill();
+
+                    ctx.strokeStyle = 'rgba(180, 245, 255, 0.9)';
+                    ctx.lineWidth = Math.max(2, s * 0.03);
+                    ctx.beginPath();
+                    ctx.ellipse(c, c, s * 0.31, s * 0.13, Math.PI / 7, 0, Math.PI * 2);
+                    ctx.stroke();
+                    ctx.beginPath();
+                    ctx.ellipse(c, c, s * 0.25, s * 0.1, -Math.PI / 6, 0, Math.PI * 2);
+                    ctx.stroke();
+
+                    IconRenderer.helpers.glow(ctx, '#d7f9ff', 12);
+                    ctx.fillStyle = '#e8fcff';
+                    ctx.beginPath();
+                    ctx.arc(c, c, s * 0.1, 0, Math.PI * 2);
+                    ctx.fill();
+                    IconRenderer.helpers.clearGlow(ctx);
+                },
+
+                'galaxia_orbit': function (ctx, s) {
+                    const c = s / 2;
+                    const bg = ctx.createRadialGradient(c, c, s * 0.08, c, c, s * 0.48);
+                    bg.addColorStop(0, '#f3e8ff');
+                    bg.addColorStop(0.4, '#a78bfa');
+                    bg.addColorStop(1, '#1b1234');
+                    ctx.fillStyle = bg;
+                    ctx.beginPath();
+                    ctx.arc(c, c, s * 0.45, 0, Math.PI * 2);
+                    ctx.fill();
+                    ctx.strokeStyle = '#c4b5fd';
+                    ctx.lineWidth = Math.max(1.6, s * 0.028);
+                    ctx.beginPath();
+                    ctx.arc(c, c, s * 0.27, 0, Math.PI * 2);
+                    ctx.stroke();
+                    ctx.fillStyle = '#f5d0fe';
+                    ctx.beginPath();
+                    ctx.arc(c + s * 0.19, c, s * 0.06, 0, Math.PI * 2);
+                    ctx.fill();
+                    ctx.strokeStyle = '#f8fafc';
+                    ctx.lineWidth = Math.max(1.1, s * 0.02);
+                    ctx.beginPath();
+                    ctx.moveTo(c - s * 0.22, c);
+                    ctx.lineTo(c + s * 0.22, c);
+                    ctx.stroke();
+                },
+                'effect_galaxia_orbit': function (ctx, s) { IconRenderer.icons['galaxia_orbit'](ctx, s); },
+                'galaxia_comet_lance': function (ctx, s) {
+                    const c = s / 2;
+                    ctx.fillStyle = '#0c1229';
+                    ctx.beginPath();
+                    ctx.roundRect(s * 0.08, s * 0.08, s * 0.84, s * 0.84, s * 0.2);
+                    ctx.fill();
+                    ctx.strokeStyle = '#7dd3fc';
+                    ctx.lineWidth = Math.max(1.4, s * 0.026);
+                    ctx.stroke();
+                    const trail = ctx.createLinearGradient(s * 0.2, c, s * 0.85, c);
+                    trail.addColorStop(0, 'rgba(167, 139, 250, 0.2)');
+                    trail.addColorStop(1, '#67e8f9');
+                    ctx.strokeStyle = trail;
+                    ctx.lineWidth = Math.max(3, s * 0.055);
+                    ctx.beginPath();
+                    ctx.moveTo(s * 0.2, c + s * 0.08);
+                    ctx.lineTo(s * 0.78, c - s * 0.08);
+                    ctx.stroke();
+                    ctx.fillStyle = '#e0f2fe';
+                    ctx.beginPath();
+                    ctx.moveTo(s * 0.8, c - s * 0.13);
+                    ctx.lineTo(s * 0.9, c);
+                    ctx.lineTo(s * 0.8, c + s * 0.13);
+                    ctx.closePath();
+                    ctx.fill();
+                },
+                'effect_galaxia_comet': function (ctx, s) { IconRenderer.icons['galaxia_comet_lance'](ctx, s); },
+                'galaxia_event_horizon': function (ctx, s) {
+                    const c = s / 2;
+                    ctx.fillStyle = '#100d1c';
+                    ctx.beginPath();
+                    ctx.roundRect(s * 0.08, s * 0.08, s * 0.84, s * 0.84, s * 0.2);
+                    ctx.fill();
+                    const halo = ctx.createRadialGradient(c, c, s * 0.06, c, c, s * 0.34);
+                    halo.addColorStop(0, '#ffffff');
+                    halo.addColorStop(0.2, '#f0abfc');
+                    halo.addColorStop(0.55, '#7c3aed');
+                    halo.addColorStop(1, 'rgba(16, 13, 28, 0)');
+                    ctx.fillStyle = halo;
+                    ctx.beginPath();
+                    ctx.arc(c, c, s * 0.34, 0, Math.PI * 2);
+                    ctx.fill();
+                    ctx.fillStyle = '#03020a';
+                    ctx.beginPath();
+                    ctx.arc(c, c, s * 0.11, 0, Math.PI * 2);
+                    ctx.fill();
+                    ctx.strokeStyle = '#d8b4fe';
+                    ctx.lineWidth = Math.max(1.2, s * 0.024);
+                    ctx.beginPath();
+                    ctx.arc(c, c, s * 0.2, 0, Math.PI * 2);
+                    ctx.stroke();
+                },
+                'effect_galaxia_horizon': function (ctx, s) { IconRenderer.icons['galaxia_event_horizon'](ctx, s); },
+                'galaxia_stellar_bloom': function (ctx, s) {
+                    const c = s / 2;
+                    ctx.fillStyle = '#0d152c';
+                    ctx.beginPath();
+                    ctx.roundRect(s * 0.08, s * 0.08, s * 0.84, s * 0.84, s * 0.2);
+                    ctx.fill();
+                    ctx.strokeStyle = '#93c5fd';
+                    ctx.lineWidth = Math.max(1.4, s * 0.026);
+                    ctx.stroke();
+                    for (let i = 0; i < 8; i++) {
+                        const a = (Math.PI * 2 * i) / 8;
+                        const x = c + Math.cos(a) * s * 0.2;
+                        const y = c + Math.sin(a) * s * 0.2;
+                        ctx.fillStyle = i % 2 === 0 ? '#e0f2fe' : '#c4b5fd';
+                        ctx.beginPath();
+                        ctx.arc(x, y, s * 0.045, 0, Math.PI * 2);
+                        ctx.fill();
+                    }
+                    ctx.fillStyle = '#f8fafc';
+                    ctx.beginPath();
+                    ctx.arc(c, c, s * 0.07, 0, Math.PI * 2);
+                    ctx.fill();
+                },
+                'effect_galaxia_bloom': function (ctx, s) { IconRenderer.icons['galaxia_stellar_bloom'](ctx, s); },
+                'galaxia_astral_overdrive': function (ctx, s) {
+                    const c = s / 2;
+                    ctx.fillStyle = '#0a1124';
+                    ctx.beginPath();
+                    ctx.roundRect(s * 0.08, s * 0.08, s * 0.84, s * 0.84, s * 0.2);
+                    ctx.fill();
+                    ctx.strokeStyle = '#7dd3fc';
+                    ctx.lineWidth = Math.max(1.4, s * 0.026);
+                    ctx.stroke();
+                    for (let i = 0; i < 10; i++) {
+                        const a = (Math.PI * 2 * i) / 10;
+                        ctx.strokeStyle = i % 2 ? '#60a5fa' : '#a78bfa';
+                        ctx.lineWidth = Math.max(1.1, s * 0.02);
+                        ctx.beginPath();
+                        ctx.moveTo(c + Math.cos(a) * s * 0.12, c + Math.sin(a) * s * 0.12);
+                        ctx.lineTo(c + Math.cos(a) * s * 0.34, c + Math.sin(a) * s * 0.34);
+                        ctx.stroke();
+                    }
+                    ctx.fillStyle = '#f8fafc';
+                    ctx.beginPath();
+                    ctx.arc(c, c, s * 0.085, 0, Math.PI * 2);
+                    ctx.fill();
+                },
+                'effect_galaxia_overdrive': function (ctx, s) { IconRenderer.icons['galaxia_astral_overdrive'](ctx, s); },
+                'galaxia_big_bang': function (ctx, s) {
+                    const c = s / 2;
+                    ctx.fillStyle = '#080d1e';
+                    ctx.beginPath();
+                    ctx.roundRect(s * 0.08, s * 0.08, s * 0.84, s * 0.84, s * 0.2);
+                    ctx.fill();
+                    const ring = ctx.createLinearGradient(s * 0.15, s * 0.15, s * 0.85, s * 0.85);
+                    ring.addColorStop(0, '#7dd3fc');
+                    ring.addColorStop(0.5, '#c084fc');
+                    ring.addColorStop(1, '#fde68a');
+                    ctx.strokeStyle = ring;
+                    ctx.lineWidth = Math.max(1.8, s * 0.03);
+                    ctx.beginPath();
+                    ctx.arc(c, c, s * 0.3, 0, Math.PI * 2);
+                    ctx.stroke();
+                    ctx.fillStyle = '#f8fafc';
+                    ctx.beginPath();
+                    ctx.arc(c, c, s * 0.09, 0, Math.PI * 2);
+                    ctx.fill();
+                    ctx.strokeStyle = '#fdf2f8';
+                    ctx.lineWidth = Math.max(1.2, s * 0.022);
+                    ctx.beginPath();
+                    ctx.moveTo(c - s * 0.22, c);
+                    ctx.lineTo(c + s * 0.22, c);
+                    ctx.moveTo(c, c - s * 0.22);
+                    ctx.lineTo(c, c + s * 0.22);
+                    ctx.stroke();
+                },
+                'effect_galaxia_bigbang': function (ctx, s) { IconRenderer.icons['galaxia_big_bang'](ctx, s); },
 
                 'class_ninja': function (ctx, s) {
                     const c = s / 2;
@@ -7619,6 +7819,40 @@
                     ctx.arc(c - s * 0.1, c - s * 0.08, s * 0.06, 0, Math.PI * 2);
                     ctx.arc(c + s * 0.1, c - s * 0.08, s * 0.06, 0, Math.PI * 2);
                     ctx.fill();
+                    IconRenderer.helpers.clearGlow(ctx);
+                },
+
+                'master_dragonhunter_apex': function (ctx, s) {
+                    const c = s / 2;
+                    const bg = ctx.createRadialGradient(c, c, s * 0.04, c, c, s * 0.52);
+                    bg.addColorStop(0, '#ffe6b5');
+                    bg.addColorStop(0.2, '#ff9742');
+                    bg.addColorStop(0.62, '#7b1212');
+                    bg.addColorStop(1, '#140307');
+                    ctx.fillStyle = bg;
+                    ctx.fillRect(0, 0, s, s);
+
+                    IconRenderer.helpers.glow(ctx, '#ffd580', 14);
+                    ctx.fillStyle = '#ffe3a8';
+                    ctx.beginPath();
+                    ctx.moveTo(c, s * 0.1);
+                    ctx.lineTo(c + s * 0.12, c - s * 0.02);
+                    ctx.lineTo(c + s * 0.32, c - s * 0.05);
+                    ctx.lineTo(c + s * 0.18, c + s * 0.08);
+                    ctx.lineTo(c + s * 0.22, c + s * 0.28);
+                    ctx.lineTo(c, c + s * 0.16);
+                    ctx.lineTo(c - s * 0.22, c + s * 0.28);
+                    ctx.lineTo(c - s * 0.18, c + s * 0.08);
+                    ctx.lineTo(c - s * 0.32, c - s * 0.05);
+                    ctx.lineTo(c - s * 0.12, c - s * 0.02);
+                    ctx.closePath();
+                    ctx.fill();
+
+                    ctx.strokeStyle = 'rgba(255, 233, 170, 0.92)';
+                    ctx.lineWidth = Math.max(2, s * 0.025);
+                    ctx.beginPath();
+                    ctx.arc(c, c + s * 0.26, s * 0.19, Math.PI * 0.12, Math.PI * 0.88);
+                    ctx.stroke();
                     IconRenderer.helpers.clearGlow(ctx);
                 },
 
@@ -9618,15 +9852,44 @@
                     ticketsRequired: 1,
                     imagePath: 'assets/dragonhunter.jpg',
                     icon: '🐉',
-                    description: 'Legendary dragon slayer with devastating fire abilities',
+                    title: 'Cazador del Cielo Carmesí',
+                    description: 'Cazador dracónico híbrido de fuego y naturaleza. Encadena ignición, control del terreno y ejecuciones aéreas para borrar oleadas y jefes.',
+                    passiveSystem: {
+                        name: 'Marca de Escamas Ardientes',
+                        description: 'Cada golpe aplica 1 marca ígnea (máx 8). A 8 marcas: detona por daño masivo y reduce 15% el daño del enemigo por 6s.'
+                    },
                     abilities: [
-                        { id: 'dragon_arrow', name: 'Triple Flecha Flamígera', type: 'standard', cooldown: 3000, currentCooldown: 0, keyBinding: 'q', effectId: 'effect_flame_arrow', icon: '🏹', iconImage: 'assets/tripleflechaflamigera.jpg', burnStacks: 0, description: 'Dispara tres flechas flamígeras que aplican quemadura acumulativa a los enemigos.' },
-                        { id: 'dragon_breath', name: 'Bomba de Aliento de Dragón', type: 'standard', cooldown: 8000, currentCooldown: 0, keyBinding: 'w', effectId: 'effect_dragon_breath', icon: '🐉', description: 'Lanza una bomba explosiva que libera aliento de dragón, quemando a todos los enemigos en el área.' },
-                        { id: 'triple_arrow', name: 'Flecha Triple Uso', type: 'standard', cooldown: 5000, currentCooldown: 0, keyBinding: 'e', effectId: 'effect_triple', icon: '🏹', description: 'Dispara tres flechas simultáneas en diferentes direcciones para atacar múltiples objetivos.' },
-                        { id: 'nature_rise', name: 'Naturaleza en Ascenso', type: 'standard', cooldown: 12000, currentCooldown: 0, keyBinding: 't', effectId: 'effect_nature', icon: '🌿', description: 'Invoca el poder de la naturaleza para regenerar vida y aumentar tu defensa temporalmente.' }
+                        { id: 'dragon_arrow', name: 'Volea de Colmillos Ígneos', type: 'standard', cooldown: 2800, currentCooldown: 0, keyBinding: 'q', effectId: 'effect_flame_arrow', icon: '🏹', iconImage: 'assets/tripleflechaflamigera.jpg', burnStacks: 0, description: 'Lanza 3 flechas guiadas de fuego dracónico. Cada impacto aplica Marca de Escamas y quemadura prolongada.' },
+                        { id: 'dragon_breath', name: 'Aliento de Ruina', type: 'standard', cooldown: 7200, currentCooldown: 0, keyBinding: 'w', effectId: 'effect_dragon_breath', icon: '🐉', description: 'Detona una cápsula de aliento volcánico que aturde brevemente y deja una zona de fuego persistente.' },
+                        { id: 'triple_arrow', name: 'Tridente Predador', type: 'standard', cooldown: 4600, currentCooldown: 0, keyBinding: 'e', effectId: 'effect_triple', icon: '🎯', description: 'Disparo triple especializado: perforación, combustión y empuje táctico con daño escalado por impacto.' },
+                        { id: 'nature_rise', name: 'Arboleda Dracónica', type: 'standard', cooldown: 9800, currentCooldown: 0, keyBinding: 't', effectId: 'effect_nature', icon: '🌿', description: 'Invoca espinas vivas que ralentizan enemigos y te dan regeneración, defensa y resistencia temporal.' }
                     ],
-                    semiUltimate: { id: 'dragon_madness', name: 'Locura Dracónica', type: 'semi-ultimate', cooldown: 18000, currentCooldown: 0, keyBinding: 'a', effectId: 'effect_madness', icon: '🐉', description: 'Entras en un estado de locura dracónica que aumenta masivamente tu velocidad de ataque y daño por fuego.' },
-                    ultimateAbility: { id: 'dragon_ultimate', name: 'Explosión Dracónica', type: 'ultimate', cooldown: 25000, currentCooldown: 0, keyBinding: 's', effectId: 'effect_draconic', icon: '💥', description: 'Liberas una explosión devastadora de energía dracónica que vaporiza a todos los enemigos cercanos.' }
+                    semiUltimate: { id: 'dragon_madness', name: 'Ascenso del Depredador', type: 'semi-ultimate', cooldown: 17000, currentCooldown: 0, keyBinding: 'a', effectId: 'effect_madness', icon: '🐲', description: 'Ganas invulnerabilidad corta, movilidad extrema y una ráfaga de flechas incendiarias en dos fases.' },
+                    ultimateAbility: { id: 'dragon_ultimate', name: 'Veredicto del Último Dragón', type: 'ultimate', cooldown: 24000, currentCooldown: 0, keyBinding: 's', effectId: 'effect_draconic', icon: '💥', description: 'Ejecuta una secuencia en 3 anillos de ignición que debilita a los enemigos y colapsa en una detonación final.' }
+                },
+                {
+                    id: 'class_galaxia',
+                    name: 'Galaxia',
+                    type: 'class',
+                    tier: 'SSS',
+                    tierColor: '#7ad3ff',
+                    ticketsRequired: 1,
+                    imagePath: 'assets/mysticsage.jpg',
+                    icon: '🌌',
+                    title: 'Núcleo de Singularidad',
+                    description: 'Arquitecta del vacío táctico. Combina pulsos de ruptura, control de masas y colapsos de dimensión para quebrar formaciones enemigas.',
+                    passiveSystem: {
+                        name: 'Resonancia Astral',
+                        description: 'Cada habilidad conectada otorga 1 carga astral (máx 10). A 10 cargas, la siguiente habilidad inflige daño amplificado y reduce 20% los cooldowns activos.'
+                    },
+                    abilities: [
+                        { id: 'galaxia_orbit', name: 'Pulso Prisma', type: 'standard', cooldown: 4500, currentCooldown: 0, keyBinding: 'q', effectId: 'effect_galaxia_orbit', icon: '🛰️', description: 'Toque: destello central + explosión + rayo fino frontal. Mantener: explosión sin rayo y orbe púrpura orbital por 7s con daño por contacto.' },
+                        { id: 'galaxia_comet_lance', name: 'Ráfaga de Tránsito', type: 'standard', cooldown: 5600, currentCooldown: 0, keyBinding: 'w', effectId: 'effect_galaxia_comet', icon: '☄️', description: 'Descarga lineal de agujas estelares que atraviesan objetivos y rematan en micro-estallidos.' },
+                        { id: 'galaxia_event_horizon', name: 'Cisma de Horizonte', type: 'standard', cooldown: 9200, currentCooldown: 0, keyBinding: 'e', effectId: 'effect_galaxia_horizon', icon: '🕳️', description: 'Primera activación: levita e inutiliza enemigos. Segunda activación: traslada a afectados a universo paralelo con daño constante y ventaja ofensiva para Galaxia.' },
+                        { id: 'galaxia_stellar_bloom', name: 'Marea de Fragmentos', type: 'standard', cooldown: 10800, currentCooldown: 0, keyBinding: 't', effectId: 'effect_galaxia_bloom', icon: '✨', description: 'Explosión radial de fragmentos estelares en dos oleadas con ralentización y presión de zona.' }
+                    ],
+                    semiUltimate: { id: 'galaxia_astral_overdrive', name: 'Sobremarcha de Singularidad', type: 'semi-ultimate', cooldown: 19000, currentCooldown: 0, keyBinding: 'a', effectId: 'effect_galaxia_overdrive', icon: '🌠', description: 'Impulso de combate con invulnerabilidad breve, refuerzo de daño y pulsos gravitatorios encadenados.' },
+                    ultimateAbility: { id: 'galaxia_big_bang', name: 'Corona del Vacío', type: 'ultimate', cooldown: 29000, currentCooldown: 0, keyBinding: 's', effectId: 'effect_galaxia_bigbang', icon: '💫', description: 'Colapso de múltiple fase que comprime, ralentiza y detona en una implosión final de alta escala.' }
                 },
                 // SSS TIER - REWORK: LEGIONARIO ROMANO
                 {
@@ -9639,7 +9902,7 @@
                     imagePath: 'assets/legionarioromano.jpg',
                     icon: '🦅',
                     title: 'Gloria Aeterna de Roma',
-                    description: 'REWORK v2.0 - Guerrero legendario del Imperio Romano. Maestro absoluto de la disciplina militar, las formaciones tácticas y el combate de legión. Cada golpe de su gladius carga la gloria de mil batallas.',
+                    description: 'Guerrero legendario del Imperio Romano. Maestro absoluto de la disciplina militar, las formaciones tácticas y el combate de legión. Cada golpe de su gladius carga la gloria de mil batallas.',
                     passiveSystem: {
                         name: 'Disciplina Romana',
                         description: 'Cada enemigo eliminado otorga +2% de daño y +1% de defensa (máx 30 stacks). Acumula "Gloria" que reduce cooldowns un 1% por stack.'
@@ -9686,7 +9949,7 @@
                     imagePath: 'assets/hoplitaespartano.jpg',
                     icon: '🛡️',
                     title: 'Molon Labe - Gloria Eterna de Esparta',
-                    description: 'REWORK v2.0 - Guerrero inmortal de Esparta. Entrenado desde los 7 años en la Agoge, representa la perfección del combate griego. "Vuelve con tu escudo, o sobre él." - el código supremo del guerrero espartano.',
+                    description: 'Guerrero inmortal de Esparta. Entrenado desde los 7 años en la Agoge, representa la perfección del combate griego. "Vuelve con tu escudo, o sobre él."',
                     passiveSystem: {
                         name: 'Furia Espartana',
                         description: 'Cuanto menos HP tengas, más daño infliges (hasta +100% a 20% HP). Cada kill restaura 5% HP y otorga "Kléos" (gloria) que aumenta todas tus stats 2% por stack (máx 15).'
@@ -9839,7 +10102,7 @@
                     imagePath: 'assets/elementalist.jpg',
                     icon: '🔥',
                     title: 'Arcanista de los Cuatro Nucleos',
-                    description: 'REWORK v3.0 - Mago de control de zonas. Encadena rayos, congela frentes y desata un cataclismo elemental por fases.',
+                    description: 'Mago de control de zonas. Encadena rayos, congela frentes y desata un cataclismo elemental por fases.',
                     abilities: [
                         { id: 'elem_storm', name: 'Arco Tempestuoso', type: 'standard', cooldown: 3600, currentCooldown: 0, keyBinding: 'e', effectId: 'effect_elem_bolt', icon: '⚡', description: 'Descarga en cadena con rebotes electricos. Aturde brevemente y aplica Vulnerabilidad de Voltaje.' },
                         { id: 'elem_ice', name: 'Prision Criogenica', type: 'standard', cooldown: 5200, currentCooldown: 0, keyBinding: 't', effectId: 'effect_barrier', icon: '🧊', description: 'Genera un anillo de hielo que inmoviliza y erosiona defensa enemiga antes de fracturar.' }
@@ -9857,7 +10120,7 @@
                     imagePath: 'assets/mysticsage.jpg',
                     icon: '🔮',
                     title: 'Archimago de los Reinos Olvidados',
-                    description: 'REWORK v2.0 - Portador de magia ancestral que ha transcendido los límites mortales. Sus conjuros canalizan el poder de dimensiones prohibidas. Cada hechizo resuena con el eco de civilizaciones perdidas.',
+                    description: 'Portador de magia ancestral que ha trascendido los límites mortales. Sus conjuros canalizan el poder de dimensiones prohibidas. Cada hechizo resuena con el eco de civilizaciones perdidas.',
                     passiveSystem: {
                         name: 'Resonancia Arcana',
                         description: 'Cada habilidad usada otorga 1 stack de "Poder Arcano" (+5% daño mágico, máx 10). Al llegar a 10 stacks, tu siguiente habilidad tiene cooldown 0 y causa +50% daño. Los stacks se consumen al usar esta habilidad empoderada.'
@@ -9904,7 +10167,7 @@
                     imagePath: 'assets/wild_berserker_icon.png',
                     icon: '🪓',
                     title: 'Avatar de la Destrucción Primigenia',
-                    description: 'REWORK v2.0 - Guerrero salvaje que ha abrazado la locura del combate. Cada herida recibida alimenta su furia incontenible. La sangre de sus enemigos es su elixir de poder. No conoce el miedo, solo la sed de destrucción.',
+                    description: 'Guerrero salvaje que ha abrazado la locura del combate. Cada herida recibida alimenta su furia incontenible. La sangre de sus enemigos es su elixir de poder. No conoce el miedo, solo la sed de destrucción.',
                     passiveSystem: {
                         name: 'Sed de Batalla',
                         description: 'Cuanto menos HP tengas, más poderoso eres: <50% HP = +50% daño, +30% velocidad. <25% HP = +100% daño, +60% velocidad, inmune a aturdimientos. <10% HP = +200% daño, +100% velocidad, robo de vida 20%, inmune a todo CC. Cada kill restaura 10% HP.'
@@ -10008,7 +10271,7 @@
                     imagePath: 'assets/roninsamurai.jpg',
                     icon: '⚔️',
                     title: 'Disciplina del Acero Silente',
-                    description: 'REWORK v3.0 - Clase inicial de control y precision. Combina cortes de iaido, parries y niebla tactica para dominar duelos y limpiar grupos.',
+                    description: 'Clase inicial de control y precisión. Combina cortes de iaido, parries y niebla táctica para dominar duelos y limpiar grupos.',
                     abilities: [
                         { id: 'samurai_dash', name: 'Iaido Relampago', type: 'standard', cooldown: 3000, currentCooldown: 0, keyBinding: 'q', effectId: 'effect_iaido', icon: '🗡️', description: 'Dash de corte lineal. Golpea enemigos en trayectoria, aplica sangrado breve y reposiciona al instante.' },
                         { id: 'samurai_counter', name: 'Parada del Ronin', type: 'standard', cooldown: 5500, currentCooldown: 0, keyBinding: 'w', effectId: 'effect_parry', icon: '🛡️', description: 'Entras en postura defensiva. Si recibes impacto, bloqueas gran parte del dano y respondes con corte de ruptura.' },
@@ -10019,87 +10282,7 @@
                 }
             ],
 
-            // FRUITS = Special powers
-            fruits: [
-                {
-                    id: 'fruit_inferno',
-                    name: 'Inferno Fruit',
-                    type: 'fruit',
-                    imagePath: 'assets/fruits/inferno.png',
-                    icon: '🔥',
-                    description: 'Grants mastery over flames',
-                    abilities: [
-                        { id: 'inferno_blast', name: 'Fire Blast', type: 'standard', cooldown: 2500, currentCooldown: 0, keyBinding: 'a', effectId: 'effect_fire_blast', icon: '🔥' },
-                        { id: 'inferno_wall', name: 'Flame Wall', type: 'standard', cooldown: 4000, currentCooldown: 0, keyBinding: 's', effectId: 'effect_flame_wall', icon: '🧡' }
-                    ],
-                    ultimateAbility: { id: 'inferno_ultimate', name: 'Inferno Nova', type: 'ultimate', cooldown: 15000, currentCooldown: 0, keyBinding: 'd', effectId: 'effect_inferno_nova', icon: '💥' }
-                },
-                {
-                    id: 'fruit_glacier',
-                    name: 'Glacier Fruit',
-                    type: 'fruit',
-                    imagePath: 'assets/fruits/glacier.png',
-                    icon: '❄️',
-                    description: 'Controls ice and frost',
-                    abilities: [
-                        { id: 'glacier_shard', name: 'Ice Shard', type: 'standard', cooldown: 2500, currentCooldown: 0, keyBinding: 'a', effectId: 'effect_ice_shard', icon: '🧊' },
-                        { id: 'glacier_freeze', name: 'Deep Freeze', type: 'standard', cooldown: 5000, currentCooldown: 0, keyBinding: 's', effectId: 'effect_freeze', icon: '❄️' }
-                    ],
-                    ultimateAbility: { id: 'glacier_ultimate', name: 'Eternal Winter', type: 'ultimate', cooldown: 18000, currentCooldown: 0, keyBinding: 'd', effectId: 'effect_winter', icon: '🌨️' }
-                },
-                {
-                    id: 'fruit_storm',
-                    name: 'Storm Fruit',
-                    type: 'fruit',
-                    imagePath: 'assets/fruits/storm.png',
-                    icon: '⚡',
-                    description: 'Commands thunder and lightning',
-                    abilities: [
-                        { id: 'storm_bolt', name: 'Lightning Bolt', type: 'standard', cooldown: 2000, currentCooldown: 0, keyBinding: 'a', effectId: 'effect_lightning', icon: '⚡' },
-                        { id: 'storm_field', name: 'Thunder Field', type: 'standard', cooldown: 4500, currentCooldown: 0, keyBinding: 's', effectId: 'effect_thunder_field', icon: '🌩️' }
-                    ],
-                    ultimateAbility: { id: 'storm_ultimate', name: 'Tempest Rage', type: 'ultimate', cooldown: 16000, currentCooldown: 0, keyBinding: 'd', effectId: 'effect_tempest', icon: '🌪️' }
-                },
-                {
-                    id: 'fruit_void',
-                    name: 'Void Fruit',
-                    type: 'fruit',
-                    imagePath: 'assets/fruits/void.png',
-                    icon: '🕳️',
-                    description: 'Manipulates darkness and gravity',
-                    abilities: [
-                        { id: 'void_hole', name: 'Void Hole', type: 'standard', cooldown: 3000, currentCooldown: 0, keyBinding: 'a', effectId: 'effect_void_hole', icon: '⚫' },
-                        { id: 'void_pull', name: 'Gravity Pull', type: 'standard', cooldown: 4000, currentCooldown: 0, keyBinding: 's', effectId: 'effect_gravity', icon: '🌑' }
-                    ],
-                    ultimateAbility: { id: 'void_ultimate', name: 'Singularity', type: 'ultimate', cooldown: 17000, currentCooldown: 0, keyBinding: 'd', effectId: 'effect_singularity', icon: '🕳️' }
-                },
-                {
-                    id: 'fruit_radiance',
-                    name: 'Radiance Fruit',
-                    type: 'fruit',
-                    imagePath: 'assets/fruits/radiance.png',
-                    icon: '✨',
-                    description: 'Harnesses pure light energy',
-                    abilities: [
-                        { id: 'radiance_beam', name: 'Light Beam', type: 'standard', cooldown: 2000, currentCooldown: 0, keyBinding: 'a', effectId: 'effect_light_beam', icon: '💡' },
-                        { id: 'radiance_speed', name: 'Light Speed', type: 'standard', cooldown: 6000, currentCooldown: 0, keyBinding: 's', effectId: 'effect_light_speed', icon: '⚡' }
-                    ],
-                    ultimateAbility: { id: 'radiance_ultimate', name: 'Solar Flare', type: 'ultimate', cooldown: 14000, currentCooldown: 0, keyBinding: 'd', effectId: 'effect_solar', icon: '☀️' }
-                },
-                {
-                    id: 'fruit_nature',
-                    name: 'Nature Fruit',
-                    type: 'fruit',
-                    imagePath: 'assets/fruits/nature.png',
-                    icon: '🌿',
-                    description: 'Controls plants and life force',
-                    abilities: [
-                        { id: 'nature_vine', name: 'Vine Whip', type: 'standard', cooldown: 2800, currentCooldown: 0, keyBinding: 'a', effectId: 'effect_vine', icon: '🌱' },
-                        { id: 'nature_growth', name: 'Rapid Growth', type: 'standard', cooldown: 5500, currentCooldown: 0, keyBinding: 's', effectId: 'effect_growth', icon: '🌳' }
-                    ],
-                    ultimateAbility: { id: 'nature_ultimate', name: 'Forest Awakening', type: 'ultimate', cooldown: 19000, currentCooldown: 0, keyBinding: 'd', effectId: 'effect_forest', icon: '🌲' }
-                }
-            ],
+            fruits: [],
 
             // MASTER CLASSES - Unlocked through mastery missions
             masterClasses: [
@@ -10195,6 +10378,39 @@
                             { id: 'kill_with_ninja', type: 'kill_count', classId: 'class_ninja', amount: 150, current: 0, description: 'Elimina 150 enemigos usando Shadow Ninja' },
                             { id: 'survive_ninja_raid', type: 'survive_waves', classId: 'class_ninja', waves: 20, current: 0, description: 'Sobrevive 20 oleadas en una raid usando Shadow Ninja' },
                             { id: 'use_silent_execution', type: 'ability_usage', abilityId: 'ninja_ultimate', amount: 12, current: 0, description: 'Usa Asesino de Sombras 12 veces' }
+                        ]
+                    }
+                },
+                {
+                    id: 'master_dragonhunter_apex',
+                    name: 'Dragonhunter Apex',
+                    type: 'master_class',
+                    tier: 'MASTER',
+                    tierColor: '#ff7b2e',
+                    baseClassId: 'class_dragonhunter',
+                    imagePath: 'assets/dragonhunter.jpg',
+                    icon: '👑',
+                    description: 'Evolución maestra del Dragonhunter. Conviertes cada combate en una cacería terminal de fuego, escamas y colapso atmosférico.',
+                    passiveSystem: {
+                        name: 'Dominio del Apex',
+                        description: 'Cada enemigo marcado explota al morir, propagando fuego y reduciendo 6% los cooldowns restantes. Los bosses reciben debilidad dracónica acumulativa.'
+                    },
+                    abilities: [
+                        { id: 'dragon_master_inferno_sigil', name: 'Sello Inferno', type: 'standard', cooldown: 4200, currentCooldown: 0, keyBinding: 'q', effectId: 'effect_dragon_master_sigil', icon: '🔥', description: 'Marca enemigos en área y provoca detonaciones en cadena al acumular ignición.' },
+                        { id: 'dragon_master_skybreaker', name: 'Skybreaker', type: 'standard', cooldown: 6200, currentCooldown: 0, keyBinding: 'w', effectId: 'effect_dragon_master_skybreaker', icon: '🗡️', description: 'Tajo aéreo descendente que rompe formación enemiga y aplica aturdimiento corto.' },
+                        { id: 'dragon_master_scales', name: 'Escamas Primordiales', type: 'standard', cooldown: 9800, currentCooldown: 0, keyBinding: 'e', effectId: 'effect_dragon_master_scales', icon: '🛡️', description: 'Activa escamas vivas: reducción de daño, reflejo parcial y aura de quemadura defensiva.' },
+                        { id: 'dragon_master_purge', name: 'Purga Ígnea', type: 'standard', cooldown: 11800, currentCooldown: 0, keyBinding: 't', effectId: 'effect_dragon_master_purge', icon: '🌋', description: 'Limpia debuffs del jugador y libera una onda de fuego volcánico en 2 pulsos.' }
+                    ],
+                    semiUltimate: { id: 'dragon_master_ascension', name: 'Ascensión del Apex', type: 'semi-ultimate', cooldown: 18500, currentCooldown: 0, keyBinding: 'a', effectId: 'effect_dragon_master_ascension', icon: '🐉', description: 'Transformación dracónica breve: movilidad extrema, invulnerabilidad, daño aumentado y flechas incendiarias automáticas.' },
+                    ultimateAbility: { id: 'dragon_master_final_hunt', name: 'La Última Cacería', type: 'ultimate', cooldown: 30000, currentCooldown: 0, keyBinding: 's', effectId: 'effect_dragon_master_final_hunt', icon: '☄️', description: 'Secuencia final de caza: sellos de ejecución, ráfaga atmosférica y colapso dracónico sobre todos los enemigos.' },
+                    masteryMission: {
+                        title: 'Juramento del Apex',
+                        description: 'Demuestra que eres el cazador definitivo de dragones',
+                        requirements: [
+                            { id: 'kill_ancient_dragon', type: 'kill_boss', target: 'ancient_dragon', amount: 5, current: 0, description: 'Derrota al Ancient Dragon 5 veces' },
+                            { id: 'kill_with_dragonhunter', type: 'kill_count', classId: 'class_dragonhunter', amount: 180, current: 0, description: 'Elimina 180 enemigos usando Dragonhunter' },
+                            { id: 'survive_dragon_raid', type: 'survive_waves', classId: 'class_dragonhunter', waves: 20, current: 0, description: 'Sobrevive 20 oleadas usando Dragonhunter' },
+                            { id: 'use_dragon_verdict', type: 'ability_usage', abilityId: 'dragon_ultimate', amount: 15, current: 0, description: 'Usa Veredicto del Último Dragón 15 veces' }
                         ]
                     }
                 },
@@ -10671,6 +10887,235 @@
 
                 ctx.restore();
             };
+
+            // Dungeon 2D models (menu cards)
+            IconRenderer.icons['dungeon_astral_observatory'] = (ctx, s) => {
+                const c = s / 2;
+                const panel = ctx.createLinearGradient(0, 0, s, s);
+                panel.addColorStop(0, '#0b1024');
+                panel.addColorStop(0.6, '#1b2a52');
+                panel.addColorStop(1, '#0a1736');
+                ctx.fillStyle = panel;
+                ctx.beginPath();
+                ctx.roundRect(s * 0.07, s * 0.07, s * 0.86, s * 0.86, s * 0.18);
+                ctx.fill();
+
+                ctx.strokeStyle = '#7dd3fc';
+                ctx.lineWidth = Math.max(1.8, s * 0.034);
+                ctx.stroke();
+
+                // Orbit ring
+                ctx.strokeStyle = '#a5f3fc';
+                ctx.lineWidth = Math.max(1.2, s * 0.026);
+                ctx.beginPath();
+                ctx.ellipse(c, c * 0.98, s * 0.28, s * 0.15, -0.35, 0, Math.PI * 2);
+                ctx.stroke();
+
+                // Observatory dome
+                const dome = ctx.createLinearGradient(c, s * 0.22, c, s * 0.68);
+                dome.addColorStop(0, '#dbeafe');
+                dome.addColorStop(0.4, '#93c5fd');
+                dome.addColorStop(1, '#2563eb');
+                ctx.fillStyle = dome;
+                ctx.beginPath();
+                ctx.arc(c, c * 1.02, s * 0.18, Math.PI, 0);
+                ctx.lineTo(c + s * 0.2, c * 1.02);
+                ctx.lineTo(c - s * 0.2, c * 1.02);
+                ctx.closePath();
+                ctx.fill();
+
+                // Telescope beam
+                const beam = ctx.createLinearGradient(c - s * 0.05, c * 0.9, c + s * 0.25, c * 0.42);
+                beam.addColorStop(0, 'rgba(125, 211, 252, 0.25)');
+                beam.addColorStop(1, 'rgba(224, 242, 254, 0.95)');
+                ctx.fillStyle = beam;
+                ctx.beginPath();
+                ctx.moveTo(c + s * 0.02, c * 0.86);
+                ctx.lineTo(c + s * 0.25, c * 0.45);
+                ctx.lineTo(c + s * 0.18, c * 0.4);
+                ctx.lineTo(c - s * 0.02, c * 0.78);
+                ctx.closePath();
+                ctx.fill();
+
+                // Star focus
+                ctx.strokeStyle = '#f8fafc';
+                ctx.lineWidth = Math.max(1, s * 0.02);
+                ctx.beginPath();
+                ctx.moveTo(c + s * 0.22, c * 0.41);
+                ctx.lineTo(c + s * 0.31, c * 0.41);
+                ctx.moveTo(c + s * 0.265, c * 0.35);
+                ctx.lineTo(c + s * 0.265, c * 0.47);
+                ctx.stroke();
+            };
+
+            IconRenderer.icons['dungeon_galactic_breach'] = (ctx, s) => {
+                const c = s / 2;
+                const panel = ctx.createLinearGradient(0, 0, s, s);
+                panel.addColorStop(0, '#12091f');
+                panel.addColorStop(0.5, '#2a1142');
+                panel.addColorStop(1, '#120824');
+                ctx.fillStyle = panel;
+                ctx.beginPath();
+                ctx.roundRect(s * 0.07, s * 0.07, s * 0.86, s * 0.86, s * 0.18);
+                ctx.fill();
+
+                ctx.strokeStyle = '#c084fc';
+                ctx.lineWidth = Math.max(1.8, s * 0.034);
+                ctx.stroke();
+
+                // Rupture halo
+                const halo = ctx.createRadialGradient(c, c, s * 0.06, c, c, s * 0.3);
+                halo.addColorStop(0, '#ffffff');
+                halo.addColorStop(0.25, '#f0abfc');
+                halo.addColorStop(0.55, '#a855f7');
+                halo.addColorStop(1, 'rgba(15, 6, 26, 0)');
+                ctx.fillStyle = halo;
+                ctx.beginPath();
+                ctx.arc(c, c, s * 0.32, 0, Math.PI * 2);
+                ctx.fill();
+
+                // Breach core
+                ctx.fillStyle = '#05030b';
+                ctx.beginPath();
+                ctx.arc(c, c, s * 0.13, 0, Math.PI * 2);
+                ctx.fill();
+
+                ctx.strokeStyle = '#e879f9';
+                ctx.lineWidth = Math.max(1.2, s * 0.024);
+                ctx.beginPath();
+                ctx.arc(c, c, s * 0.2, 0, Math.PI * 2);
+                ctx.stroke();
+
+                // Fracture spikes
+                const spikes = [
+                    [0.0, -0.3, 0.04],
+                    [0.28, -0.08, 0.03],
+                    [0.2, 0.23, 0.035],
+                    [-0.15, 0.27, 0.03],
+                    [-0.3, -0.02, 0.032],
+                    [-0.22, -0.24, 0.028],
+                ];
+                ctx.fillStyle = '#f5d0fe';
+                spikes.forEach(([rx, ry, w]) => {
+                    const x = c + s * rx;
+                    const y = c + s * ry;
+                    const size = s * w;
+                    ctx.beginPath();
+                    ctx.moveTo(x, y - size * 1.8);
+                    ctx.lineTo(x + size, y + size);
+                    ctx.lineTo(x - size, y + size);
+                    ctx.closePath();
+                    ctx.fill();
+                });
+            };
+
+            const createGalacticBreachMobIcon = (variant) => {
+                return (ctx, s) => {
+                    const c = s / 2;
+                    const bg = ctx.createLinearGradient(0, 0, s, s);
+                    bg.addColorStop(0, '#0f1229');
+                    bg.addColorStop(1, '#1c1038');
+                    ctx.fillStyle = bg;
+                    ctx.beginPath();
+                    ctx.roundRect(s * 0.08, s * 0.08, s * 0.84, s * 0.84, s * 0.18);
+                    ctx.fill();
+                    ctx.strokeStyle = '#8b5cf6';
+                    ctx.lineWidth = Math.max(1.5, s * 0.03);
+                    ctx.stroke();
+
+                    ctx.save();
+                    ctx.translate(c, c);
+                    if (variant === 'stalker') {
+                        ctx.strokeStyle = '#67e8f9';
+                        ctx.lineWidth = Math.max(1.4, s * 0.026);
+                        ctx.beginPath();
+                        ctx.ellipse(0, 0, s * 0.22, s * 0.12, 0, 0, Math.PI * 2);
+                        ctx.stroke();
+                        ctx.beginPath();
+                        ctx.arc(0, 0, s * 0.07, 0, Math.PI * 2);
+                        ctx.fillStyle = '#e0f2fe';
+                        ctx.fill();
+                        for (let i = 0; i < 3; i++) {
+                            const a = -0.8 + i * 0.8;
+                            ctx.beginPath();
+                            ctx.moveTo(Math.cos(a) * s * 0.2, Math.sin(a) * s * 0.2);
+                            ctx.lineTo(Math.cos(a) * s * 0.3, Math.sin(a) * s * 0.3);
+                            ctx.stroke();
+                        }
+                    } else if (variant === 'reaver') {
+                        ctx.strokeStyle = '#c084fc';
+                        ctx.lineWidth = Math.max(1.4, s * 0.026);
+                        ctx.beginPath();
+                        ctx.arc(0, 0, s * 0.2, 0, Math.PI * 2);
+                        ctx.stroke();
+                        ctx.fillStyle = '#f5d0fe';
+                        for (let i = 0; i < 6; i++) {
+                            const a = (Math.PI * 2 * i) / 6;
+                            const x = Math.cos(a) * s * 0.26;
+                            const y = Math.sin(a) * s * 0.26;
+                            ctx.beginPath();
+                            ctx.moveTo(x, y);
+                            ctx.lineTo(x + Math.cos(a + 0.35) * s * 0.06, y + Math.sin(a + 0.35) * s * 0.06);
+                            ctx.lineTo(x + Math.cos(a - 0.35) * s * 0.06, y + Math.sin(a - 0.35) * s * 0.06);
+                            ctx.closePath();
+                            ctx.fill();
+                        }
+                    } else if (variant === 'colossus') {
+                        const shard = ctx.createLinearGradient(-s * 0.14, -s * 0.18, s * 0.14, s * 0.2);
+                        shard.addColorStop(0, '#e0f2fe');
+                        shard.addColorStop(0.5, '#7dd3fc');
+                        shard.addColorStop(1, '#2563eb');
+                        ctx.fillStyle = shard;
+                        ctx.beginPath();
+                        ctx.moveTo(0, -s * 0.25);
+                        ctx.lineTo(s * 0.2, -s * 0.02);
+                        ctx.lineTo(s * 0.08, s * 0.24);
+                        ctx.lineTo(-s * 0.08, s * 0.24);
+                        ctx.lineTo(-s * 0.2, -s * 0.02);
+                        ctx.closePath();
+                        ctx.fill();
+                        ctx.strokeStyle = '#bae6fd';
+                        ctx.lineWidth = Math.max(1.2, s * 0.022);
+                        ctx.stroke();
+                    } else if (variant === 'sovereign') {
+                        const halo = ctx.createRadialGradient(0, 0, s * 0.05, 0, 0, s * 0.32);
+                        halo.addColorStop(0, '#ffffff');
+                        halo.addColorStop(0.25, '#f0abfc');
+                        halo.addColorStop(0.7, '#7c3aed');
+                        halo.addColorStop(1, 'rgba(15, 7, 33, 0)');
+                        ctx.fillStyle = halo;
+                        ctx.beginPath();
+                        ctx.arc(0, 0, s * 0.32, 0, Math.PI * 2);
+                        ctx.fill();
+                        ctx.fillStyle = '#05030b';
+                        ctx.beginPath();
+                        ctx.arc(0, 0, s * 0.12, 0, Math.PI * 2);
+                        ctx.fill();
+                        ctx.strokeStyle = '#f5d0fe';
+                        ctx.lineWidth = Math.max(1.4, s * 0.026);
+                        ctx.beginPath();
+                        ctx.arc(0, 0, s * 0.22, 0, Math.PI * 2);
+                        ctx.stroke();
+                        for (let i = 0; i < 8; i++) {
+                            const a = (Math.PI * 2 * i) / 8;
+                            ctx.beginPath();
+                            ctx.moveTo(Math.cos(a) * s * 0.24, Math.sin(a) * s * 0.24);
+                            ctx.lineTo(Math.cos(a) * s * 0.34, Math.sin(a) * s * 0.34);
+                            ctx.stroke();
+                        }
+                    }
+                    ctx.restore();
+                };
+            };
+
+            IconRenderer.icons['breach_stalker'] = createGalacticBreachMobIcon('stalker');
+            IconRenderer.icons['mob_breach_stalker'] = createGalacticBreachMobIcon('stalker');
+            IconRenderer.icons['singularity_reaver'] = createGalacticBreachMobIcon('reaver');
+            IconRenderer.icons['mob_singularity_reaver'] = createGalacticBreachMobIcon('reaver');
+            IconRenderer.icons['quantum_colossus'] = createGalacticBreachMobIcon('colossus');
+            IconRenderer.icons['mob_quantum_colossus'] = createGalacticBreachMobIcon('colossus');
+            IconRenderer.icons['rift_sovereign'] = createGalacticBreachMobIcon('sovereign');
+            IconRenderer.icons['mob_rift_sovereign'] = createGalacticBreachMobIcon('sovereign');
         })();
 
 
@@ -10687,15 +11132,32 @@
                     icon: '🐉',
                     name: 'Dragonhunter',
                     upgrades: {
-                        2: [{ type: 'damage', bonus: 5, icon: '🏹', description: 'Triple Flecha Flamigera', detail: '+5% Dano de fuego' }],
-                        3: [{ type: 'burn_damage', bonus: 10, icon: '🔥', description: 'Quemadura Intensa', detail: '+10% Dano de quemadura' }],
-                        4: [{ type: 'nature_heal', bonus: 15, icon: '🌿', description: 'Naturaleza en Ascenso', detail: '+15% Curacion y defensa' }],
-                        5: [{ type: 'arrow_count', bonus: 1, icon: '🏹', description: 'Flecha Triple Uso', detail: 'Dispara 1 flecha adicional' }],
-                        6: [{ type: 'cooldown', bonus: 10, icon: '⏱️', description: 'Aliento Rapido', detail: '-10% Cooldown' }],
-                        7: [{ type: 'crit', bonus: 15, icon: '🎯', description: 'Punteria Mortal', detail: '+15% Critico' }],
-                        8: [{ type: 'range', bonus: 20, icon: '📍', description: 'Alcance Draconico', detail: '+20% Rango' }],
-                        9: [{ type: 'madness_duration', bonus: 30, icon: '🐉', description: 'Locura Draconica', detail: '+30% Duracion' }],
-                        10: [{ type: 'ultimate', bonus: 50, icon: '💥', description: 'EXPLOSION DRACONICA', detail: 'Ultimate +50% dano' }]
+                        2: [{ type: 'damage', bonus: 8, icon: '🏹', description: 'Volea de Colmillos Ígneos', detail: '+8% daño base de proyectiles' }],
+                        3: [{ type: 'burn_damage', bonus: 15, icon: '🔥', description: 'Marca Ardiente', detail: '+15% daño de quemadura' }],
+                        4: [{ type: 'nature_heal', bonus: 20, icon: '🌿', description: 'Arboleda Dracónica', detail: '+20% regeneración y defensa' }],
+                        5: [{ type: 'arrow_count', bonus: 1, icon: '🎯', description: 'Tridente Predador', detail: '+1 impacto garantizado por rotación' }],
+                        6: [{ type: 'cooldown', bonus: 12, icon: '⏱️', description: 'Ritmo de Caza', detail: '-12% cooldown global' }],
+                        7: [{ type: 'crit', bonus: 18, icon: '🎯', description: 'Punto de Quiebre', detail: '+18% crítico' }],
+                        8: [{ type: 'range', bonus: 25, icon: '📍', description: 'Ala Carmesí', detail: '+25% alcance de habilidades' }],
+                        9: [{ type: 'madness_duration', bonus: 35, icon: '🐉', description: 'Ascenso del Depredador', detail: '+35% duración de modo apex' }],
+                        10: [{ type: 'ultimate', bonus: 70, icon: '💥', description: 'Veredicto del Último Dragón', detail: 'Ultimate +70% daño' }]
+                    }
+                },
+
+                // GALAXIA - Stellar control and gravitational bursts
+                'class_galaxia': {
+                    icon: '🌌',
+                    name: 'Galaxia',
+                    upgrades: {
+                        2: [{ type: 'orbit_damage', bonus: 10, icon: '🛰️', description: 'Órbita Centinela', detail: '+10% daño orbital' }],
+                        3: [{ type: 'comet_pierce', bonus: 1, icon: '☄️', description: 'Lanza Cometa', detail: '+1 penetración de objetivo' }],
+                        4: [{ type: 'gravity_pull', bonus: 22, icon: '🕳️', description: 'Horizonte de Eventos', detail: '+22% fuerza de atracción' }],
+                        5: [{ type: 'stellar_heal', bonus: 18, icon: '✨', description: 'Floración Estelar', detail: '+18% curación de brote' }],
+                        6: [{ type: 'cooldown', bonus: 12, icon: '⏱️', description: 'Sincronía Astral', detail: '-12% cooldown' }],
+                        7: [{ type: 'crit', bonus: 14, icon: '🎯', description: 'Precisión de Vacío', detail: '+14% crítico' }],
+                        8: [{ type: 'range', bonus: 24, icon: '📏', description: 'Resonancia de Campo', detail: '+24% radio de habilidades' }],
+                        9: [{ type: 'overdrive_duration', bonus: 30, icon: '🌠', description: 'Overdrive Astral', detail: '+30% duración' }],
+                        10: [{ type: 'ultimate', bonus: 75, icon: '💫', description: 'Big Bang Vectorial', detail: 'Ultimate +75% daño' }]
                     }
                 },
 
@@ -10919,6 +11381,23 @@
                         8: [{ type: 'darkness_duration', bonus: 40, icon: '🌑', description: 'Noche Eterna', detail: '+40% Duración oscuridad' }],
                         9: [{ type: 'abyss_damage', bonus: 60, icon: '👹', description: 'Poder Abisal', detail: '+60% Daño abisal' }],
                         10: [{ type: 'ultimate', bonus: 200, icon: '🌑', description: 'Noche Eterna', detail: 'Ultimate +200% daño' }]
+                    }
+                },
+
+                // DRAGONHUNTER APEX - Master evolution
+                'master_dragonhunter_apex': {
+                    icon: '👑',
+                    name: 'Dragonhunter Apex',
+                    upgrades: {
+                        2: [{ type: 'sigil_damage', bonus: 20, icon: '🔥', description: 'Sello Inferno', detail: '+20% daño de detonación' }],
+                        3: [{ type: 'skybreaker_stun', bonus: 30, icon: '🗡️', description: 'Skybreaker', detail: '+30% duración de aturdimiento' }],
+                        4: [{ type: 'scales_defense', bonus: 25, icon: '🛡️', description: 'Escamas Primordiales', detail: '+25% mitigación defensiva' }],
+                        5: [{ type: 'purge_wave', bonus: 28, icon: '🌋', description: 'Purga Ígnea', detail: '+28% daño en pulsos' }],
+                        6: [{ type: 'cooldown', bonus: 16, icon: '⏱️', description: 'Mandato Apex', detail: '-16% cooldown' }],
+                        7: [{ type: 'crit', bonus: 22, icon: '🎯', description: 'Instinto Alfa', detail: '+22% crítico' }],
+                        8: [{ type: 'ascension_duration', bonus: 38, icon: '🐉', description: 'Ascensión del Apex', detail: '+38% duración de transformación' }],
+                        9: [{ type: 'execution_threshold', bonus: 12, icon: '☄️', description: 'Protocolo de Cacería', detail: '+12% umbral de ejecución' }],
+                        10: [{ type: 'ultimate', bonus: 180, icon: '☄️', description: 'La Última Cacería', detail: 'Ultimate +180% daño' }]
                     }
                 }
             },
@@ -11846,7 +12325,6 @@
                     equipped: 'class_dragonhunter',
                     characters: 'char_rex',
                     classes: 'class_ninja',
-                    fruits: 'fruit_inferno',
                     masteries: 'class_samurai'
                 };
 
@@ -11912,7 +12390,6 @@
                     equipped: { title: 'EQUIPADO', subtitle: 'Gestiona tu equipamiento actual y habilidades' },
                     characters: { title: 'PERSONAJES', subtitle: 'Selecciona tu héroe y personaliza tu estilo de juego' },
                     classes: { title: 'CLASES', subtitle: 'Desbloquea y equipa clases poderosas con tickets' },
-                    fruits: { title: 'FRUTAS', subtitle: 'Selecciona poderes elementales para personalizar tu combate' },
                     masteries: { title: 'MAESTRÍAS', subtitle: 'Completa misiones épicas para desbloquear clases maestras' }
                 };
 
@@ -11938,11 +12415,6 @@
                         content.innerHTML = this.renderClassesTab();
                         this.attachClassListeners();
                         this.attachSelectorControls('classes');
-                        break;
-                    case 'fruits':
-                        content.innerHTML = this.renderFruitsTab();
-                        this.attachFruitListeners();
-                        this.attachSelectorControls('fruits');
                         break;
                     case 'masteries':
                         content.innerHTML = this.renderMasteriesTab();
@@ -13695,6 +14167,13 @@
                 if (this.invulnerable) return;
                 if (MobRaidSystem && MobRaidSystem.stardustTransforming) return;
 
+                // Global dungeon nerf: massively reduce incoming enemy damage in raid/practice combat.
+                if (MobRaidSystem && (MobRaidSystem.active || PracticeModeManager.active)) {
+                    const enemyDamageScale = Math.max(0, Number(MobRaidSystem.enemyGlobalDamageScale || 1));
+                    damage = damage * enemyDamageScale;
+                    if (damage > 0) damage = Math.max(1, Math.floor(damage));
+                }
+
                 // Guardian Tablets Interception
                 if (this.guardianTablets > 0) {
                     this.guardianTablets--;
@@ -13741,7 +14220,11 @@
 
                 this.hp = Math.max(0, this.hp - damage);
                 this.invulnerable = true;
-                this.invulnerableTime = 1000; // 1 second invulnerability
+                if (MobRaidSystem && (MobRaidSystem.active || PracticeModeManager.active)) {
+                    this.invulnerableTime = Math.max(1000, Number(MobRaidSystem.enemyContactInvulnerabilityMs || 1000));
+                } else {
+                    this.invulnerableTime = 1000; // 1 second invulnerability
+                }
 
                 // Reset regeneration timer
                 this.lastDamageTime = Date.now();
@@ -13884,13 +14367,41 @@
         // ===== INPUT HANDLER =====
         const InputHandler = {
             keysPressed: new Set(),
+            keyDownAt: {},
+            lastHoldDurations: {},
 
             handleKeyDown(event) {
-                this.keysPressed.add(event.key.toLowerCase());
+                const key = event.key.toLowerCase();
+                this.keysPressed.add(key);
+                if (!this.keyDownAt[key]) {
+                    this.keyDownAt[key] = Date.now();
+                }
             },
 
             handleKeyUp(event) {
-                this.keysPressed.delete(event.key.toLowerCase());
+                const key = event.key.toLowerCase();
+                this.keysPressed.delete(key);
+                const startedAt = this.keyDownAt[key];
+                if (startedAt) {
+                    this.lastHoldDurations[key] = Math.max(0, Date.now() - startedAt);
+                    delete this.keyDownAt[key];
+                }
+
+                // Galaxia: la habilidad Q se resuelve al soltar para distinguir toque vs mantener.
+                if (key === 'q') {
+                    const abilities = EquipmentManager.getAllAbilities();
+                    const ability = abilities.find(a => a.keyBinding === 'q');
+                    if (ability && ability.id === 'galaxia_orbit' && (MobRaidSystem.active || PracticeModeManager.active)) {
+                        AbilityManager.activateAbility('galaxia_orbit');
+                    }
+                }
+            },
+
+            consumeHoldDuration(key) {
+                const k = String(key || '').toLowerCase();
+                const ms = Number(this.lastHoldDurations[k] || 0);
+                delete this.lastHoldDurations[k];
+                return ms;
             },
 
             processMovement(deltaTime) {
@@ -13938,6 +14449,8 @@
                     if (this.keysPressed.has(key)) {
                         const ability = abilities.find(a => a.keyBinding === key);
                         if (ability) {
+                            // Galaxia Q se activa al liberar tecla para habilitar modo "mantener".
+                            if (ability.id === 'galaxia_orbit' && key === 'q') return;
                             AbilityManager.activateAbility(ability.id);
                             this.keysPressed.delete(key);
                         }
@@ -15137,6 +15650,22 @@
                 }
                 ability.currentCooldown = cooldown;
 
+                // Galaxia - Cisma de Horizonte:
+                // La primera activación (marcado) abre una ventana de recast y no debe consumir
+                // el cooldown principal. El cooldown real se consume en la segunda activación.
+                if (abilityId === 'galaxia_event_horizon') {
+                    const state = MobRaidSystem.galaxiaParallelState;
+                    const hasRecastWindow =
+                        state &&
+                        !state.active &&
+                        Date.now() <= (state.canRecastUntil || 0) &&
+                        state.markedIds &&
+                        state.markedIds.size > 0;
+                    if (!hasRecastWindow) {
+                        ability.currentCooldown = 0;
+                    }
+                }
+
                 if (typeof SfxManager !== 'undefined') {
                     SfxManager.playAbility(abilityId);
                 }
@@ -15166,7 +15695,22 @@
                     } else if (abilityId === 'dragon_madness') {
                         MobRaidSystem.draconicMadness();
                     } else if (abilityId === 'dragon_ultimate') {
+                        LoadoutManager.trackAbilityUsage('dragon_ultimate');
                         MobRaidSystem.draconicExplosion();
+                    }
+                    // Galaxia
+                    else if (abilityId === 'galaxia_orbit') {
+                        MobRaidSystem.galaxiaOrbit();
+                    } else if (abilityId === 'galaxia_comet_lance') {
+                        MobRaidSystem.galaxiaCometLance();
+                    } else if (abilityId === 'galaxia_event_horizon') {
+                        MobRaidSystem.galaxiaEventHorizon();
+                    } else if (abilityId === 'galaxia_stellar_bloom') {
+                        MobRaidSystem.galaxiaStellarBloom();
+                    } else if (abilityId === 'galaxia_astral_overdrive') {
+                        MobRaidSystem.galaxiaAstralOverdrive();
+                    } else if (abilityId === 'galaxia_big_bang') {
+                        MobRaidSystem.galaxiaBigBang();
                     }
                     // Elementalist
                     else if (abilityId === 'elem_storm') {
@@ -15268,6 +15812,20 @@
                         MobRaidSystem.abyssalShadowEmperor();
                     } else if (abilityId === 'abyssal_eternal_night') {
                         MobRaidSystem.abyssalEternalNight();
+                    }
+                    // Dragonhunter Apex (Master Class)
+                    else if (abilityId === 'dragon_master_inferno_sigil') {
+                        MobRaidSystem.dragonMasterInfernoSigil();
+                    } else if (abilityId === 'dragon_master_skybreaker') {
+                        MobRaidSystem.dragonMasterSkybreaker();
+                    } else if (abilityId === 'dragon_master_scales') {
+                        MobRaidSystem.dragonMasterScales();
+                    } else if (abilityId === 'dragon_master_purge') {
+                        MobRaidSystem.dragonMasterPurge();
+                    } else if (abilityId === 'dragon_master_ascension') {
+                        MobRaidSystem.dragonMasterAscension();
+                    } else if (abilityId === 'dragon_master_final_hunt') {
+                        MobRaidSystem.dragonMasterFinalHunt();
                     }
                     // Roman Legionary
                     else if (abilityId === 'roman_gladius') {
@@ -15617,19 +16175,24 @@
                 panel.innerHTML = `
                     <button id="close-info-panel" style="
                         position: absolute;
-                        top: 20px;
-                        right: 20px;
+                        top: 12px;
+                        right: 12px;
                         background: rgba(255, 0, 110, 0.2);
                         border: 2px solid #ff006e;
                         color: #ff006e;
-                        width: 40px;
-                        height: 40px;
+                        width: 36px;
+                        height: 36px;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
                         border-radius: 50%;
-                        font-size: 20px;
+                        font-size: 18px;
+                        font-weight: 900;
+                        line-height: 1;
                         cursor: pointer;
                         transition: all 0.3s;
-                        z-index: 10;
-                    " onmouseover="this.style.background='#ff006e'; this.style.color='#fff'" onmouseout="this.style.background='rgba(255, 0, 110, 0.2)'; this.style.color='#ff006e'">?</button>
+                        z-index: 40;
+                    " onmouseover="this.style.background='#ff006e'; this.style.color='#fff'" onmouseout="this.style.background='rgba(255, 0, 110, 0.2)'; this.style.color='#ff006e'">X</button>
 
                     <div style="text-align: center; margin-bottom: 30px;">
                         <!-- Class Image -->
@@ -15773,13 +16336,6 @@
         menuOverlay.addEventListener('click', closeMenu);
 
         // Menu Items
-        document.getElementById('menu-raid-btn').addEventListener('click', () => {
-            closeMenu();
-            if (!MobRaidSystem.active) {
-                RaidManager.showRaidSelect();
-            }
-        });
-
         document.getElementById('menu-dungeon-btn').addEventListener('click', () => {
             closeMenu();
             DungeonManager.showDungeonSelect();
@@ -16503,6 +17059,13 @@
                     recommendedClasses: ['Cosmic Archon', 'Elementalist'],
                     rewardTarget: 'class_cosmic_archon'
                 },
+                'Galaxia': {
+                    color: '#9adfff',
+                    mobs: ['astral_wisp', 'nebula_guardian', 'void_lancer'],
+                    bosses: ['star_eater'],
+                    recommendedClasses: ['🌌 Galaxia', '🌪️ Wind Master'],
+                    rewardTarget: 'class_galaxia'
+                },
                 'Wild Berserker': {
                     color: '#8b0000',
                     mobs: ['blood_reaver', 'axe_thrower'],
@@ -16799,7 +17362,17 @@
                     bosses: ['star_eater'],
                     recommendedClasses: ['🌌 Cosmic Archon', '🌊 Elementalist'],
                     rewardTarget: 'class_cosmic_archon',
-                    rewardName: 'Cosmic Archon'
+                    rewardName: 'Cosmic Archon',
+                    model2dKey: 'dungeon_astral_observatory'
+                },
+                'Galactic Breach': {
+                    color: '#9adfff',
+                    mobs: ['breach_stalker', 'singularity_reaver', 'quantum_colossus'],
+                    bosses: ['rift_sovereign'],
+                    recommendedClasses: ['🌌 Galaxia', '🌌 Cosmic Archon'],
+                    rewardTarget: 'class_galaxia',
+                    rewardName: 'Galaxia',
+                    model2dKey: 'dungeon_galactic_breach'
                 }
             },
 
@@ -16968,12 +17541,13 @@
                     menuList.innerHTML = Object.keys(this.dungeons).map(dungeonName => {
                         const data = this.dungeons[dungeonName];
                         const firstMob = data.mobs[0];
+                        const dungeonIcon = data.model2dKey || ('mob_' + firstMob);
                         const isActive = dungeonName === currentCategory;
 
                         return `
                             <div class="raid-menu-item ${isActive ? 'active' : ''}" data-category="${dungeonName}" style="color: ${data.color}">
                                 <div class="raid-menu-icon" style="${isActive ? `background: ${data.color}; color: white;` : `color: ${data.color}; background: rgba(0,0,0,0.3);`}">
-                                    <div>${IconRenderer.getIconHTML('mob_' + firstMob, 32)}</div>
+                                    <div>${IconRenderer.getIconHTML(dungeonIcon, 32)}</div>
                                 </div>
                                 <div class="raid-menu-info">
                                     <h3>${dungeonName}</h3>
@@ -17604,6 +18178,12 @@
             stardustFormTimer: 0,
             stardustFormDuration: 10000,
             stardustTransforming: false,
+            galaxiaPulseOrb: null,
+            galaxiaParallelState: null,
+            // Global enemy balance scalars (dungeons/raids)
+            enemyGlobalDamageScale: 0.05, // 95% less incoming damage from enemies
+            enemyAbilityCooldownScale: 20, // 95% less cast frequency (20x slower ability cycle)
+            enemyContactInvulnerabilityMs: 5000, // slower repeated contact damage to player
 
             mobTypes: {
                 tornado_apprentice: {
@@ -18366,6 +18946,69 @@
                     dropsTicketFor: 'class_cosmic_archon',
                     isLegendaryBoss: true,
                     level: 23
+                },
+                // GALACTIC BREACH MOBS - Galaxia tickets
+                breach_stalker: {
+                    name: 'Breach Stalker',
+                    icon: '🛰️',
+                    color: '#67e8f9',
+                    hp: 245,
+                    maxHp: 245,
+                    speed: 98,
+                    damage: 48,
+                    size: 34,
+                    isBoss: false,
+                    ability: 'magic_bolt',
+                    abilityCooldown: 2000,
+                    abilityRange: 430,
+                    dropsTicketFor: 'class_galaxia'
+                },
+                singularity_reaver: {
+                    name: 'Singularity Reaver',
+                    icon: '🜲',
+                    color: '#c084fc',
+                    hp: 330,
+                    maxHp: 330,
+                    speed: 76,
+                    damage: 58,
+                    size: 42,
+                    isBoss: false,
+                    ability: 'arcane_explosion',
+                    abilityCooldown: 3200,
+                    abilityRange: 340,
+                    dropsTicketFor: 'class_galaxia'
+                },
+                quantum_colossus: {
+                    name: 'Quantum Colossus',
+                    icon: '🔷',
+                    color: '#7dd3fc',
+                    hp: 440,
+                    maxHp: 440,
+                    speed: 54,
+                    damage: 64,
+                    size: 50,
+                    isBoss: false,
+                    ability: 'lightning_storm',
+                    abilityCooldown: 4100,
+                    abilityRange: 360,
+                    dropsTicketFor: 'class_galaxia'
+                },
+                rift_sovereign: {
+                    name: 'Rift Sovereign',
+                    icon: '🕳️',
+                    color: '#f0abfc',
+                    hp: 3300,
+                    maxHp: 3300,
+                    speed: 46,
+                    damage: 128,
+                    size: 94,
+                    isBoss: true,
+                    ability: 'lightning_storm',
+                    abilityCooldown: 2100,
+                    abilityRange: 640,
+                    dropsTicketFor: 'class_galaxia',
+                    isLegendaryBoss: true,
+                    level: 26
                 },
                 // LUNAR ABYSS MOBS - Stardust Night tickets
                 lunar_watcher: {
@@ -19136,6 +19779,14 @@
                     needsReturn: false // Flag to indicate boss needs to return
                 };
 
+                // Apply global nerf profile to every spawned enemy/boss across all dungeons.
+                if (typeof mob.damage === 'number') {
+                    mob.damage = Math.max(1, Math.floor(mob.damage * this.enemyGlobalDamageScale));
+                }
+                if (typeof mob.abilityCooldown === 'number' && mob.abilityCooldown > 0) {
+                    mob.abilityCooldown = Math.floor(mob.abilityCooldown * this.enemyAbilityCooldownScale);
+                }
+
                 // Validate HP values to prevent NaN/Infinity errors (only if invalid)
                 if (typeof mob.maxHp !== 'number' || !isFinite(mob.maxHp) || mob.maxHp <= 0) {
                     console.warn(`⚠️ Invalid maxHp for ${type}, using fallback`);
@@ -19161,6 +19812,9 @@
                         this.endStardustForm();
                     }
                 }
+
+                this.updateGalaxiaOrbitingPulse(deltaTime);
+                this.updateGalaxiaParallelState(deltaTime);
 
                 // NEW v19.11.2025: Update attack indicators
                 this.updateAttackIndicators(deltaTime);
@@ -19643,6 +20297,8 @@
                                 // Gunslinger doesn't have wave survival requirement, skip
                             } else if (classId === 'class_ninja') {
                                 LoadoutManager.updateMissionProgress(classId, 'survive_ninja_raid', 1);
+                            } else if (classId === 'class_dragonhunter') {
+                                LoadoutManager.updateMissionProgress(classId, 'survive_dragon_raid', 1);
                             }
                         }
 
@@ -23309,6 +23965,8 @@
                             } else if (classId === 'class_ninja') {
                                 // Track kills for Shadow Ninja mastery mission
                                 LoadoutManager.updateMissionProgress(classId, 'kill_with_ninja', 1);
+                            } else if (classId === 'class_dragonhunter') {
+                                LoadoutManager.updateMissionProgress(classId, 'kill_with_dragonhunter', 1);
                             }
                         }
 
@@ -23336,6 +23994,8 @@
                                 } else if (classId === 'class_ninja' && mob.type === 'shadow_emperor') {
                                     // Track Shadow Emperor kills for Shadow Ninja mastery mission
                                     LoadoutManager.updateMissionProgress(classId, 'kill_shadow_emperor', 1);
+                                } else if (classId === 'class_dragonhunter' && mob.type === 'ancient_dragon') {
+                                    LoadoutManager.updateMissionProgress(classId, 'kill_ancient_dragon', 1);
                                 }
                             }
 
@@ -23890,297 +24550,252 @@
             },
 
             // DRAGONHUNTER ABILITIES
-            dragonFlameArrow(ability) {
-                const allTargets = this.getAllTargets();
-                const nearbyTargets = allTargets.filter(target => {
-                    const dx = target.x - Player.x;
-                    const dy = target.y - Player.y;
-                    const dist = Math.sqrt(dx * dx + dy * dy);
-                    return dist < 300;
-                }).slice(0, 3); // Only 3 closest
+            dragonFlameArrow() {
+                const targets = this.getAllTargets()
+                    .map(t => ({ target: t, d: Math.hypot(t.x - Player.x, t.y - Player.y) }))
+                    .filter(x => x.d <= 420)
+                    .sort((a, b) => a.d - b.d)
+                    .slice(0, 3);
+                if (!targets.length) return;
 
-                if (nearbyTargets.length === 0) {
-                    console.log('?? No enemies nearby for Flame Arrow!');
-                    return;
-                }
-
-                nearbyTargets.forEach(target => {
-                    // Apply burn stacks (enemy will take damage when it attacks) - only for mobs
-                    if (!target.isDummy) {
-                        target.burning = true;
-                        target.burnStacks = 3;
-                    }
-
-                    // Shoot arrow projectile
-                    const angle = Math.atan2(target.y - Player.y, target.x - Player.x);
+                targets.forEach((entry, idx) => {
+                    const t = entry.target;
+                    const angle = Math.atan2(t.y - Player.y, t.x - Player.x) + (idx - 1) * 0.08;
                     this.projectiles.push({
                         x: Player.x,
                         y: Player.y,
-                        vx: Math.cos(angle) * 400,
-                        vy: Math.sin(angle) * 400,
-                        size: 8,
-                        damage: 30,
-                        color: '#ff4500',
-                        life: 2000,
-                        isFlameArrow: true,
-                        isPlayerProjectile: true, // Mark as player projectile
-                        targetId: target.id,
-                        targetIsDummy: target.isDummy
+                        vx: Math.cos(angle) * 520,
+                        vy: Math.sin(angle) * 520,
+                        size: 9,
+                        damage: 42,
+                        color: '#ff5d1f',
+                        life: 1700,
+                        isPlayerProjectile: true,
+                        isBurningArrow: true,
+                        onHit: (mob) => {
+                            mob.burning = true;
+                            mob.burnStacks = Math.max(mob.burnStacks || 0, 4);
+                            mob.burnDuration = Math.max(mob.burnDuration || 0, 5200);
+                            return 42;
+                        }
                     });
                 });
-
-                console.log(`?? Flame Arrows shot at ${nearbyTargets.length} enemies! They'll take damage when attacking!`);
             },
 
             dragonBreathBomb() {
-                const allMobs = this.getAllTargets();
-                let affectedCount = 0;
-
-                allMobs.forEach(mob => {
-                    const dx = mob.x - Player.x;
-                    const dy = mob.y - Player.y;
-                    const dist = Math.sqrt(dx * dx + dy * dy);
-
-                    if (dist < 200) { // Medium radius
-                        // Apply confusion
-                        mob.confused = true;
-                        mob.confusedTime = 4000; // 4 seconds
-
-                        // 65% chance for burn
-                        if (Math.random() < 0.65) {
-                            mob.burning = true;
-                            mob.burnStacks = Math.max(mob.burnStacks, 2);
-                        }
-
-                        affectedCount++;
-                    }
+                const radius = 240;
+                let affected = 0;
+                this.checkAbilityHit(Player.x, Player.y, radius, 48, (mob) => {
+                    mob.confused = true;
+                    mob.confusedTime = 3200;
+                    mob.burning = true;
+                    mob.burnStacks = Math.max(mob.burnStacks || 0, 5);
+                    mob.burnDuration = Math.max(mob.burnDuration || 0, 6000);
+                    mob.damageReduction = Math.max(mob.damageReduction || 0, 12);
+                    affected++;
+                    this.showFloatingText(mob.x, mob.y - 18, 'ALIENTO', '#ffb36b');
                 });
-
-                console.log(`?? Dragon Breath affected ${affectedCount} enemies! Confusion + Burn!`);
+                for (let i = 0; i < 18; i++) {
+                    const a = (Math.PI * 2 * i) / 18;
+                    this.projectiles.push({
+                        x: Player.x,
+                        y: Player.y,
+                        vx: Math.cos(a) * (140 + Math.random() * 120),
+                        vy: Math.sin(a) * (140 + Math.random() * 120),
+                        size: 7,
+                        damage: 0,
+                        color: '#ff7e33',
+                        life: 420,
+                        isPlayerProjectile: false
+                    });
+                }
+                console.log(`dragonBreathBomb affected=${affected}`);
             },
 
             draconicExplosion() {
-                // Apply player buff
-                Player.applyDamageBoost(25, 11000); // 25% for 11 seconds
+                Player.applyDamageBoost(45, 9000);
+                Player.invulnerable = true;
+                Player.invulnerableTime = Math.max(Player.invulnerableTime || 0, 1200);
 
-                const allMobs = this.getAllTargets();
-                let affectedCount = 0;
-
-                allMobs.forEach(mob => {
-                    const dx = mob.x - Player.x;
-                    const dy = mob.y - Player.y;
-                    const dist = Math.sqrt(dx * dx + dy * dy);
-
-                    if (dist < 250) { // Large radius
-                        // Apply permanent damage reduction
-                        mob.damageReduction = 10;
-                        mob.damageReductionPermanent = true;
-
-                        // Immediate damage
-                        this.damageMob(mob.id, 80);
-
-                        affectedCount++;
-                    }
+                const phases = [
+                    { delay: 0, radius: 220, damage: 65, label: 'IGNICIÓN' },
+                    { delay: 450, radius: 300, damage: 78, label: 'RUPTURA' },
+                    { delay: 920, radius: 380, damage: 110, label: 'VEREDICTO' }
+                ];
+                phases.forEach((p, i) => {
+                    setTimeout(() => {
+                        this.checkAbilityHit(Player.x, Player.y, p.radius, p.damage, (mob) => {
+                            mob.damageReduction = Math.max(mob.damageReduction || 0, 15);
+                            mob.damageReductionPermanent = true;
+                            this.showFloatingText(mob.x, mob.y - 22, p.label, '#ffd089');
+                        });
+                        this.projectiles.push({
+                            x: Player.x,
+                            y: Player.y,
+                            vx: 0,
+                            vy: 0,
+                            size: Math.floor((p.radius / 8) + i * 2),
+                            damage: 0,
+                            color: i === 2 ? '#ffd166' : '#ff5a1f',
+                            life: 320,
+                            isPlayerProjectile: false
+                        });
+                    }, p.delay);
                 });
-
-                console.log(`?? Draconic Explosion! Player: +25% DMG | Enemies: -10% DMG (${affectedCount} affected)`);
             },
 
             // NEW DRAGONHUNTER ABILITIES
             tripleArrowUse() {
-                // Flecha Triple Uso: 3 flechas a direcciones aleatorias
-                // - Una traspasa enemigos (más daño por cada traspaso)
-                // - Una inflige quemadura por 5s
-                // - Una empuja hacia atrás
+                const enemies = this.getAllTargets();
+                if (!enemies.length) return;
+                const closest = enemies
+                    .map(m => ({ m, d: Math.hypot(m.x - Player.x, m.y - Player.y) }))
+                    .sort((a, b) => a.d - b.d)
+                    .slice(0, 3)
+                    .map(x => x.m);
+                while (closest.length < 3) closest.push(enemies[Math.floor(Math.random() * enemies.length)]);
 
-                const allMobs = [...this.mobs, ...this.bosses];
-                if (allMobs.length === 0) {
-                    console.log('?? No enemies for Triple Arrow!');
-                    return;
-                }
+                const spawnArrow = (target, cfg) => {
+                    const angle = Math.atan2(target.y - Player.y, target.x - Player.x);
+                    this.projectiles.push({
+                        x: Player.x,
+                        y: Player.y,
+                        vx: Math.cos(angle) * cfg.speed,
+                        vy: Math.sin(angle) * cfg.speed,
+                        size: cfg.size,
+                        damage: cfg.damage,
+                        color: cfg.color,
+                        life: cfg.life,
+                        isPlayerProjectile: true,
+                        isPiercing: !!cfg.isPiercing,
+                        piercedEnemies: [],
+                        onHit: cfg.onHit
+                    });
+                };
 
-                // Arrow 1: Piercing arrow (traspasa enemigos)
-                const angle1 = Math.random() * Math.PI * 2;
-                let piercingDamage = 25;
-                let piercedCount = 0;
-
-                this.projectiles.push({
-                    x: Player.x,
-                    y: Player.y,
-                    vx: Math.cos(angle1) * 450,
-                    vy: Math.sin(angle1) * 450,
-                    size: 10,
-                    damage: piercingDamage,
-                    color: '#00ffff',
-                    life: 2500,
-                    isPiercing: true,
-                    piercedEnemies: [],
-                    isPlayerProjectile: true,
+                spawnArrow(closest[0], {
+                    speed: 560, size: 10, damage: 44, color: '#79d6ff', life: 2200, isPiercing: true,
                     onHit: (mob) => {
-                        piercedCount++;
-                        piercingDamage += 8; // +8 damage per pierce
-                        return piercingDamage;
+                        mob.damageAmplification = Math.max(mob.damageAmplification || 1, 1.14);
+                        return 44;
                     }
                 });
-
-                // Arrow 2: Burning arrow (quemadura 5s)
-                const angle2 = Math.random() * Math.PI * 2;
-                this.projectiles.push({
-                    x: Player.x,
-                    y: Player.y,
-                    vx: Math.cos(angle2) * 450,
-                    vy: Math.sin(angle2) * 450,
-                    size: 10,
-                    damage: 30,
-                    color: '#ff4500',
-                    life: 2500,
-                    isBurningArrow: true,
-                    isPlayerProjectile: true,
+                spawnArrow(closest[1], {
+                    speed: 520, size: 10, damage: 46, color: '#ff5f2a', life: 2200,
                     onHit: (mob) => {
                         mob.burning = true;
-                        mob.burnStacks = 5;
-                        mob.burnDuration = 5000; // 5 seconds
-                        return 30;
+                        mob.burnStacks = Math.max(mob.burnStacks || 0, 6);
+                        mob.burnDuration = Math.max(mob.burnDuration || 0, 5200);
+                        return 46;
                     }
                 });
-
-                // Arrow 3: Knockback arrow (empuja hacia atrás)
-                const angle3 = Math.random() * Math.PI * 2;
-                this.projectiles.push({
-                    x: Player.x,
-                    y: Player.y,
-                    vx: Math.cos(angle3) * 450,
-                    vy: Math.sin(angle3) * 450,
-                    size: 10,
-                    damage: 28,
-                    color: '#ffbe0b',
-                    life: 2500,
-                    isKnockbackArrow: true,
-                    isPlayerProjectile: true,
+                spawnArrow(closest[2], {
+                    speed: 540, size: 10, damage: 40, color: '#ffd166', life: 2200,
                     onHit: (mob) => {
-                        const dx = mob.x - Player.x;
-                        const dy = mob.y - Player.y;
-                        const knockAngle = Math.atan2(dy, dx);
-                        mob.x += Math.cos(knockAngle) * 80;
-                        mob.y += Math.sin(knockAngle) * 80;
-                        return 28;
+                        const angle = Math.atan2(mob.y - Player.y, mob.x - Player.x);
+                        mob.x += Math.cos(angle) * 110;
+                        mob.y += Math.sin(angle) * 110;
+                        mob.confused = true;
+                        mob.confusedTime = Math.max(mob.confusedTime || 0, 1400);
+                        return 40;
                     }
                 });
-
-                console.log('?? Triple Arrow launched! Piercing, Burning, and Knockback arrows!');
             },
 
             draconicMadness() {
-                // Locura Dracónica: Empuja enemigos + quemadura 2s + invencibilidad + 7 flechas + 3 flechas aleatorias con quemadura 4s
                 const allMobs = this.getAllTargets();
-                let affectedCount = 0;
-
-                // PHASE 1: Push and burn nearby enemies
                 allMobs.forEach(mob => {
                     const dx = mob.x - Player.x;
                     const dy = mob.y - Player.y;
-                    const dist = Math.sqrt(dx * dx + dy * dy);
-
-                    if (dist < 300) { // Long range
-                        // Push away
+                    const d = Math.hypot(dx, dy);
+                    if (d <= 320) {
                         const pushAngle = Math.atan2(dy, dx);
-                        mob.x += Math.cos(pushAngle) * 100;
-                        mob.y += Math.sin(pushAngle) * 100;
-
-                        // Apply burn for 2s
+                        mob.x += Math.cos(pushAngle) * 95;
+                        mob.y += Math.sin(pushAngle) * 95;
                         mob.burning = true;
-                        mob.burnStacks = 2;
-                        mob.burnDuration = 2000;
-
-                        affectedCount++;
+                        mob.burnStacks = Math.max(mob.burnStacks || 0, 3);
+                        mob.burnDuration = Math.max(mob.burnDuration || 0, 3000);
                     }
                 });
 
-                // PHASE 2: Invincibility
                 Player.invulnerable = true;
-                Player.invulnerableTime = 3000; // 3 seconds
+                Player.invulnerableTime = Math.max(Player.invulnerableTime || 0, 2600);
+                Player.applyDamageBoost(35, 6500);
 
-                // PHASE 3: Shoot 7 arrows at nearby enemies (after 0.5s)
                 setTimeout(() => {
-                    const nearbyMobs = allMobs.filter(mob => {
-                        const dx = mob.x - Player.x;
-                        const dy = mob.y - Player.y;
-                        const dist = Math.sqrt(dx * dx + dy * dy);
-                        return dist < 350;
-                    }).slice(0, 7);
-
-                    nearbyMobs.forEach(mob => {
-                        const angle = Math.atan2(mob.y - Player.y, mob.x - Player.x);
+                    const targets = this.getAllTargets()
+                        .map(m => ({ m, d: Math.hypot(m.x - Player.x, m.y - Player.y) }))
+                        .filter(x => x.d < 420)
+                        .sort((a, b) => a.d - b.d)
+                        .slice(0, 7)
+                        .map(x => x.m);
+                    targets.forEach((mob, idx) => {
+                        const angle = Math.atan2(mob.y - Player.y, mob.x - Player.x) + (idx % 2 ? 0.04 : -0.04);
+                        this.projectiles.push({
+                            x: Player.x,
+                            y: Player.y,
+                            vx: Math.cos(angle) * 600,
+                            vy: Math.sin(angle) * 600,
+                            size: 9,
+                            damage: 38,
+                            color: '#ff3b1f',
+                            life: 1600,
+                            isPlayerProjectile: true
+                        });
+                    });
+                }, 420);
+                setTimeout(() => {
+                    for (let i = 0; i < 4; i++) {
+                        const angle = Math.random() * Math.PI * 2;
                         this.projectiles.push({
                             x: Player.x,
                             y: Player.y,
                             vx: Math.cos(angle) * 500,
                             vy: Math.sin(angle) * 500,
-                            size: 9,
-                            damage: 35,
-                            color: '#ff0000',
-                            life: 2000,
-                            isPlayerProjectile: true
-                        });
-                    });
-
-                    console.log(`?? Locura Dracónica - Phase 2: ${nearbyMobs.length} arrows fired!`);
-                }, 500);
-
-                // PHASE 4: Shoot 3 random burning arrows (after 1.2s)
-                setTimeout(() => {
-                    for (let i = 0; i < 3; i++) {
-                        const angle = Math.random() * Math.PI * 2;
-                        this.projectiles.push({
-                            x: Player.x,
-                            y: Player.y,
-                            vx: Math.cos(angle) * 450,
-                            vy: Math.sin(angle) * 450,
                             size: 10,
-                            damage: 32,
-                            color: '#ff6600',
-                            life: 2500,
+                            damage: 40,
+                            color: '#ff8e3c',
+                            life: 1900,
                             isBurningArrow: true,
                             isPlayerProjectile: true,
                             onHit: (mob) => {
                                 mob.burning = true;
-                                mob.burnStacks = 4;
-                                mob.burnDuration = 4000; // 4 seconds
-                                return 32;
+                                mob.burnStacks = Math.max(mob.burnStacks || 0, 5);
+                                mob.burnDuration = Math.max(mob.burnDuration || 0, 4200);
+                                return 40;
                             }
                         });
                     }
-
-                    console.log('?? Locura Dracónica - Phase 3: 3 burning arrows launched!');
-                }, 1200);
-
-                console.log(`?? Locura Dracónica activated! ${affectedCount} enemies pushed and burned! Invincibility active!`);
+                }, 980);
             },
 
             natureRising() {
-                // Naturaleza en Ascenso: Invoca írboles y arbustos que reducen velocidad de enemigos
-                const allMobs = [...this.mobs, ...this.bosses];
-
-                // Create 8 nature obstacles around player
                 const obstacles = [];
-                for (let i = 0; i < 8; i++) {
-                    const angle = (Math.PI * 2 * i) / 8;
-                    const distance = 80 + Math.random() * 40;
+                const total = 10;
+                for (let i = 0; i < total; i++) {
+                    const angle = (Math.PI * 2 * i) / total;
+                    const distance = 95 + Math.random() * 60;
                     obstacles.push({
                         x: Player.x + Math.cos(angle) * distance,
                         y: Player.y + Math.sin(angle) * distance,
-                        radius: 25,
-                        duration: 8000, // 8 seconds
+                        radius: 28 + Math.random() * 6,
+                        duration: 9000,
                         startTime: Date.now()
                     });
                 }
 
-                // Store obstacles for rendering and collision
                 if (!this.natureObstacles) this.natureObstacles = [];
                 this.natureObstacles.push(...obstacles);
+                Player.applyDamageBoost(12, 6500);
+                Player.hp = Math.min(Player.maxHp || 100, Player.hp + 18);
 
-                // Apply slow effect to enemies that touch obstacles
+                this.checkAbilityHit(Player.x, Player.y, 190, 35, (mob) => {
+                    mob.confused = true;
+                    mob.confusedTime = Math.max(mob.confusedTime || 0, 1400);
+                });
+
                 const slowInterval = setInterval(() => {
+                    const allMobs = this.getAllTargets();
                     if (this.natureObstacles.length === 0) {
                         clearInterval(slowInterval);
                         return;
@@ -24193,30 +24808,445 @@
                             const dist = Math.sqrt(dx * dx + dy * dy);
 
                             if (dist < obstacle.radius + mob.size) {
-                                // Apply slow (30% speed reduction)
                                 if (!mob.natureSlowed) {
-                                    mob.speed *= 0.7;
+                                    mob.speed *= 0.68;
                                     mob.natureSlowed = true;
 
-                                    // Remove slow after 2s
                                     setTimeout(() => {
                                         if (mob.natureSlowed) {
-                                            mob.speed /= 0.7;
+                                            mob.speed /= 0.68;
                                             mob.natureSlowed = false;
                                         }
-                                    }, 2000);
+                                    }, 1700);
                                 }
+                                mob.burning = true;
+                                mob.burnStacks = Math.max(mob.burnStacks || 0, 2);
+                                mob.burnDuration = Math.max(mob.burnDuration || 0, 2200);
                             }
                         });
                     });
 
-                    // Remove expired obstacles
                     this.natureObstacles = this.natureObstacles.filter(obs => {
                         return Date.now() - obs.startTime < obs.duration;
                     });
-                }, 100);
+                }, 120);
+            },
 
-                console.log('?? Naturaleza en Ascenso - 8 nature obstacles created! Enemies will be slowed!');
+            // GALAXIA ABILITIES
+            galaxiaOrbit() {
+                const holdMs = InputHandler.consumeHoldDuration('q');
+                const isCharged = holdMs >= 1200;
+                const centerX = Player.x;
+                const centerY = Player.y;
+
+                // Destello central + explosión principal
+                this.projectiles.push({
+                    x: centerX,
+                    y: centerY,
+                    vx: 0,
+                    vy: 0,
+                    size: 24,
+                    damage: 0,
+                    color: '#f3e8ff',
+                    life: 180,
+                    isPlayerProjectile: false
+                });
+                this.checkAbilityHit(centerX, centerY, 190, 64, (mob) => {
+                    this.showFloatingText(mob.x, mob.y - 18, 'PULSO', '#d8b4fe');
+                });
+
+                if (!isCharged) {
+                    // Toque: rayo fino frontal
+                    const targets = this.getAllTargets();
+                    let angle = -Math.PI / 2;
+                    if (targets.length) {
+                        const nearest = targets
+                            .map(m => ({ m, d: Math.hypot(m.x - centerX, m.y - centerY) }))
+                            .sort((a, b) => a.d - b.d)[0]?.m;
+                        if (nearest) angle = Math.atan2(nearest.y - centerY, nearest.x - centerX);
+                    }
+                    this.projectiles.push({
+                        x: centerX,
+                        y: centerY,
+                        vx: Math.cos(angle) * 980,
+                        vy: Math.sin(angle) * 980,
+                        size: 4,
+                        damage: 84,
+                        color: '#e0f2fe',
+                        life: 900,
+                        isPlayerProjectile: true,
+                        isPiercing: true,
+                        piercedEnemies: [],
+                        onHit: (mob) => {
+                            mob.confused = true;
+                            mob.confusedTime = Math.max(mob.confusedTime || 0, 800);
+                            return 84;
+                        }
+                    });
+                } else {
+                    // Mantener: sin rayo, crea orbe orbital 7s
+                    this.galaxiaPulseOrb = {
+                        x: centerX,
+                        y: centerY,
+                        angle: 0,
+                        radius: 120,
+                        size: 22,
+                        expiresAt: Date.now() + 7000,
+                        hitCooldownByMob: {}
+                    };
+                    this.showFloatingText(centerX, centerY - 26, 'ORBE ACTIVO', '#c084fc');
+                }
+            },
+
+            galaxiaCometLance() {
+                const targets = this.getAllTargets();
+                if (!targets.length) return;
+                const nearest = targets
+                    .map(m => ({ m, d: Math.hypot(m.x - Player.x, m.y - Player.y) }))
+                    .sort((a, b) => a.d - b.d)[0]?.m;
+                if (!nearest) return;
+
+                const baseAngle = Math.atan2(nearest.y - Player.y, nearest.x - Player.x);
+                const lanes = [-0.06, 0, 0.06];
+                lanes.forEach((offset, idx) => {
+                    const angle = baseAngle + offset;
+                    this.projectiles.push({
+                        x: Player.x,
+                        y: Player.y,
+                        vx: Math.cos(angle) * (780 + idx * 30),
+                        vy: Math.sin(angle) * (780 + idx * 30),
+                        size: 7,
+                        damage: 46,
+                        color: '#7dd3fc',
+                        life: 1200,
+                        isPlayerProjectile: true,
+                        isPiercing: true,
+                        piercedEnemies: [],
+                        onHit: (mob) => {
+                            mob.damageAmplification = Math.max(mob.damageAmplification || 1, 1.08);
+                            return 46;
+                        }
+                    });
+                });
+            },
+
+            galaxiaEventHorizon() {
+                const now = Date.now();
+                const state = this.galaxiaParallelState;
+
+                // Si ya está activo, ignorar nuevas activaciones.
+                if (state && state.active) {
+                    this.showFloatingText(Player.x, Player.y - 26, 'CISMA EN CURSO', '#c4b5fd');
+                    return;
+                }
+
+                // Segunda activación: abre universo paralelo
+                if (state && !state.active && now <= state.canRecastUntil && state.markedIds && state.markedIds.size > 0) {
+                    state.active = true;
+                    state.endsAt = now + 6500;
+                    state.lastTickAt = now;
+                    Player.applyDamageBoost(75, 6500);
+                    Player.invulnerable = true;
+                    Player.invulnerableTime = Math.max(Player.invulnerableTime || 0, 800);
+                    this.showFloatingText(Player.x, Player.y - 30, 'UNIVERSO PARALELO', '#f0abfc');
+                    return;
+                }
+
+                // Primera activación: levita e inutiliza
+                const allTargets = this.getAllTargets();
+                const marked = [];
+                allTargets.forEach(mob => {
+                    const dist = Math.hypot(mob.x - Player.x, mob.y - Player.y);
+                    if (dist <= 330) {
+                        marked.push(mob);
+                        if (typeof mob.preStunSpeed !== 'number') mob.preStunSpeed = mob.speed;
+                        mob.stunned = true;
+                        mob.stunnedTime = 2600;
+                        mob.stunUntil = Date.now() + 2600;
+                        mob.speed = 0;
+                        mob.silenced = true;
+                        mob.silencedTime = Math.max(mob.silencedTime || 0, 2600);
+                        this.showFloatingText(mob.x, mob.y - 14, 'LEVITACIÓN', '#ddd6fe');
+                    }
+                });
+
+                this.galaxiaParallelState = {
+                    active: false,
+                    markedIds: new Set(marked.map(m => m.id)),
+                    canRecastUntil: now + 6000,
+                    endsAt: 0,
+                    lastTickAt: 0
+                };
+            },
+
+            galaxiaStellarBloom() {
+                const waves = [
+                    { delay: 0, radius: 170, damage: 44 },
+                    { delay: 280, radius: 235, damage: 56 }
+                ];
+                waves.forEach((wave) => {
+                    setTimeout(() => {
+                        this.checkAbilityHit(Player.x, Player.y, wave.radius, wave.damage, (mob) => {
+                            const oldSpeed = mob.speed;
+                            mob.speed = Math.max(8, oldSpeed * 0.72);
+                            setTimeout(() => { mob.speed = oldSpeed; }, 1400);
+                            this.showFloatingText(mob.x, mob.y - 18, 'FRAGMENTOS', '#bfdbfe');
+                        });
+                        this.projectiles.push({
+                            x: Player.x,
+                            y: Player.y,
+                            vx: 0,
+                            vy: 0,
+                            size: Math.floor(wave.radius / 9),
+                            damage: 0,
+                            color: '#c4b5fd',
+                            life: 260,
+                            isPlayerProjectile: false
+                        });
+                    }, wave.delay);
+                });
+            },
+
+            galaxiaAstralOverdrive() {
+                Player.invulnerable = true;
+                Player.invulnerableTime = Math.max(Player.invulnerableTime || 0, 1500);
+                Player.applyDamageBoost(42, 9000);
+                for (let i = 0; i < 7; i++) {
+                    setTimeout(() => {
+                        this.checkAbilityHit(Player.x, Player.y, 140 + i * 22, 20 + i * 6);
+                        this.projectiles.push({
+                            x: Player.x,
+                            y: Player.y,
+                            vx: 0,
+                            vy: 0,
+                            size: 14 + i * 3,
+                            damage: 0,
+                            color: i % 2 ? '#c4b5fd' : '#93c5fd',
+                            life: 210,
+                            isPlayerProjectile: false
+                        });
+                    }, i * 180);
+                }
+            },
+
+            galaxiaBigBang() {
+                AbilityManager.screenShake();
+                const phases = [
+                    { delay: 0, radius: 250, damage: 62, color: '#8fc4ff' },
+                    { delay: 520, radius: 340, damage: 94, color: '#d0b8ff' },
+                    { delay: 1140, radius: 470, damage: 142, color: '#fff4ba' }
+                ];
+                phases.forEach((phase, idx) => {
+                    setTimeout(() => {
+                        this.checkAbilityHit(Player.x, Player.y, phase.radius, phase.damage, (mob) => {
+                            mob.damageAmplification = Math.max(mob.damageAmplification || 1, 1.2);
+                            this.showFloatingText(mob.x, mob.y - 24, idx === 2 ? 'CORONA' : 'VACÍO', '#fff4ba');
+                        });
+                        this.projectiles.push({
+                            x: Player.x,
+                            y: Player.y,
+                            vx: 0,
+                            vy: 0,
+                            size: Math.floor(phase.radius / 9),
+                            damage: 0,
+                            color: phase.color,
+                            life: 340,
+                            isPlayerProjectile: false
+                        });
+                    }, phase.delay);
+                });
+            },
+
+            updateGalaxiaOrbitingPulse(deltaTime) {
+                const orb = this.galaxiaPulseOrb;
+                if (!orb) return;
+                const now = Date.now();
+                if (now >= orb.expiresAt) {
+                    this.galaxiaPulseOrb = null;
+                    return;
+                }
+
+                orb.angle += (deltaTime / 1000) * 2.8;
+                orb.x = Player.x + Math.cos(orb.angle) * orb.radius;
+                orb.y = Player.y + Math.sin(orb.angle) * orb.radius;
+
+                if (!orb.visualTickAt || now - orb.visualTickAt >= 90) {
+                    orb.visualTickAt = now;
+                    this.projectiles.push({
+                        x: orb.x,
+                        y: orb.y,
+                        vx: 0,
+                        vy: 0,
+                        size: 10,
+                        damage: 0,
+                        color: '#d8b4fe',
+                        life: 160,
+                        isPlayerProjectile: false
+                    });
+                }
+
+                this.getAllTargets().forEach((mob) => {
+                    const dist = Math.hypot((mob.x - orb.x), (mob.y - orb.y));
+                    if (dist > (orb.size + mob.size)) return;
+                    const lastHit = Number(orb.hitCooldownByMob[mob.id] || 0);
+                    if (now - lastHit < 220) return;
+                    orb.hitCooldownByMob[mob.id] = now;
+                    this.damageMob(mob.id, 10);
+                    mob.confused = true;
+                    mob.confusedTime = Math.max(mob.confusedTime || 0, 450);
+                });
+            },
+
+            updateGalaxiaParallelState(deltaTime) {
+                const state = this.galaxiaParallelState;
+                if (!state) return;
+                const now = Date.now();
+
+                // Ventana de segunda activación vencida sin entrar al paralelo
+                if (!state.active && now > state.canRecastUntil) {
+                    this.galaxiaParallelState = null;
+                    return;
+                }
+
+                if (!state.active) return;
+
+                const allTargets = this.getAllTargets();
+                const markedIds = state.markedIds || new Set();
+
+                if (now >= state.endsAt) {
+                    allTargets.forEach((mob) => {
+                        if (mob.parallelMarked) {
+                            mob.parallelMarked = false;
+                            mob.silenced = false;
+                            mob.silencedTime = 0;
+                            if (typeof mob.preParallelSpeed === 'number') {
+                                mob.speed = mob.preParallelSpeed;
+                                delete mob.preParallelSpeed;
+                            }
+                        }
+                        if (mob.parallelFrozen) {
+                            mob.parallelFrozen = false;
+                            mob.stunned = false;
+                            mob.stunnedTime = 0;
+                            mob.stunUntil = null;
+                            if (typeof mob.preParallelSpeed === 'number') {
+                                mob.speed = mob.preParallelSpeed;
+                                delete mob.preParallelSpeed;
+                            } else if (typeof mob.originalSpeed === 'number') {
+                                mob.speed = mob.originalSpeed;
+                            }
+                        }
+                    });
+                    this.galaxiaParallelState = null;
+                    return;
+                }
+
+                allTargets.forEach((mob) => {
+                    if (markedIds.has(mob.id)) {
+                        if (typeof mob.preParallelSpeed !== 'number') mob.preParallelSpeed = mob.speed;
+                        mob.parallelMarked = true;
+                        mob.silenced = true;
+                        mob.silencedTime = Math.max(mob.silencedTime || 0, 300);
+                        mob.speed = Math.max(6, (mob.originalSpeed || mob.speed) * 0.45);
+                    } else {
+                        if (typeof mob.preParallelSpeed !== 'number') mob.preParallelSpeed = mob.speed;
+                        mob.parallelFrozen = true;
+                        mob.stunned = true;
+                        mob.stunnedTime = 350;
+                        mob.stunUntil = Date.now() + 350;
+                        mob.silenced = true;
+                        mob.silencedTime = Math.max(mob.silencedTime || 0, 350);
+                        mob.speed = 0;
+                    }
+                });
+
+                if (!state.lastTickAt || now - state.lastTickAt >= 360) {
+                    state.lastTickAt = now;
+                    allTargets.forEach((mob) => {
+                        if (markedIds.has(mob.id)) {
+                            this.damageMob(mob.id, 8);
+                        }
+                    });
+                }
+            },
+
+            // DRAGONHUNTER APEX MASTER ABILITIES
+            dragonMasterInfernoSigil() {
+                this.checkAbilityHit(Player.x, Player.y, 240, 62, (mob) => {
+                    mob.burning = true;
+                    mob.burnStacks = Math.max(mob.burnStacks || 0, 7);
+                    mob.burnDuration = Math.max(mob.burnDuration || 0, 6200);
+                });
+            },
+
+            dragonMasterSkybreaker() {
+                Player.invulnerable = true;
+                Player.invulnerableTime = Math.max(Player.invulnerableTime || 0, 650);
+                this.checkAbilityHit(Player.x, Player.y, 190, 88, (mob) => {
+                    mob.confused = true;
+                    mob.confusedTime = Math.max(mob.confusedTime || 0, 1700);
+                });
+            },
+
+            dragonMasterScales() {
+                Player.invulnerable = true;
+                Player.invulnerableTime = Math.max(Player.invulnerableTime || 0, 2200);
+                Player.applyDamageBoost(18, 7000);
+                this.checkAbilityHit(Player.x, Player.y, 145, 35, (mob) => {
+                    mob.burning = true;
+                    mob.burnStacks = Math.max(mob.burnStacks || 0, 3);
+                });
+            },
+
+            dragonMasterPurge() {
+                Player.hp = Math.min(Player.maxHp || 100, Player.hp + 26);
+                [0, 260].forEach((delay, idx) => {
+                    setTimeout(() => {
+                        this.checkAbilityHit(Player.x, Player.y, 230 + idx * 45, 58 + idx * 14);
+                    }, delay);
+                });
+            },
+
+            dragonMasterAscension() {
+                Player.invulnerable = true;
+                Player.invulnerableTime = Math.max(Player.invulnerableTime || 0, 3200);
+                Player.applyDamageBoost(55, 9000);
+                setTimeout(() => this.dragonFlameArrow(), 260);
+                setTimeout(() => this.tripleArrowUse(), 720);
+                setTimeout(() => this.dragonBreathBomb(), 1200);
+            },
+
+            dragonMasterFinalHunt() {
+                AbilityManager.screenShake();
+                Player.invulnerable = true;
+                Player.invulnerableTime = Math.max(Player.invulnerableTime || 0, 2600);
+                const phases = [
+                    { delay: 0, radius: 260, damage: 72 },
+                    { delay: 420, radius: 340, damage: 94 },
+                    { delay: 940, radius: 470, damage: 158 }
+                ];
+                phases.forEach((phase, idx) => {
+                    setTimeout(() => {
+                        this.checkAbilityHit(Player.x, Player.y, phase.radius, phase.damage, (mob) => {
+                            mob.damageAmplification = Math.max(mob.damageAmplification || 1, 1.24);
+                            mob.burning = true;
+                            mob.burnStacks = Math.max(mob.burnStacks || 0, 8);
+                            mob.burnDuration = Math.max(mob.burnDuration || 0, 7000);
+                            this.showFloatingText(mob.x, mob.y - 24, idx === 2 ? 'FINAL HUNT' : 'APEX', '#ffd494');
+                        });
+                        this.projectiles.push({
+                            x: Player.x,
+                            y: Player.y,
+                            vx: 0,
+                            vy: 0,
+                            size: Math.floor(phase.radius / 10),
+                            damage: 0,
+                            color: idx === 2 ? '#ffe09c' : '#ff6f3b',
+                            life: 340,
+                            isPlayerProjectile: false
+                        });
+                    }, phase.delay);
+                });
             },
 
             // WIND MASTER ABILITIES
